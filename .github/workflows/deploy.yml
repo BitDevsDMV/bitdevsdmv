@@ -31,6 +31,8 @@ jobs:
         run: npm ci
 
       - name: Build
+        env:
+          PUBLIC_SUGGEST_API_URL: https://bitdevsdmv-suggest.securesovereigns.workers.dev
         run: npm run build
 
       - name: Upload Pages artifact
