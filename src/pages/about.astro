@@ -1,7 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
-import { TELEGRAM_HANDLE, TELEGRAM_URL, TIMEZONE_LABEL } from '../lib/events';
+import { TIMEZONE_LABEL } from '../lib/events';
 import { breadcrumbJsonLd, webPageJsonLd } from '../lib/seo';
 
 const crumbs = [
@@ -74,10 +74,6 @@ const description =
 
             <h2>Contact</h2>
             <p>
-              Organizer Telegram:{' '}
-              <a href={TELEGRAM_URL} rel="noopener noreferrer">{TELEGRAM_HANDLE}</a>
-              (also listed on
-              <a href="https://secsov.com/" rel="noopener noreferrer">secsov.com</a>).
               Event times are Eastern Time ({TIMEZONE_LABEL}). Subscribe via{' '}
               <a href="/calendar.ics">calendar.ics</a>.
             </p>

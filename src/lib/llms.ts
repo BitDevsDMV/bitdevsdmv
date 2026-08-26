@@ -4,8 +4,6 @@ import {
   formatRelativeDate,
   getHistoricalEvents,
   getPublishedEvents,
-  TELEGRAM_HANDLE,
-  TELEGRAM_URL,
   TIMEZONE,
   TIMEZONE_LABEL,
   toDateIso,
@@ -37,7 +35,6 @@ export async function buildLlmsTxt(): Promise<string> {
     `- [Events archive](${SITE}/events.md): Chronological list of Socratic Seminars`,
     `- [Events JSON](${SITE}/events.json): Structured event index for agents`,
     `- [Calendar ICS](${SITE}/calendar.ics): Subscribe to published seminars`,
-    `- Organizer Telegram: [${TELEGRAM_HANDLE}](${TELEGRAM_URL})`,
     '',
     '## Seminars',
     '',
@@ -84,7 +81,6 @@ export async function buildLlmsFullTxt(): Promise<string> {
     'Not: market talk, token pitches, investor networking, or recruitment spam.',
     'Ground rules: Chatham House Rule; no photos/video/recordings of discussion; keep it technical.',
     `Timezone: ${TIMEZONE_LABEL} (${TIMEZONE}).`,
-    `Organizer Telegram: ${TELEGRAM_HANDLE} — ${TELEGRAM_URL}`,
     '',
     '## Key URLs',
     '',
@@ -153,7 +149,6 @@ BitDevs DMV hosts monthly Socratic Seminars: open, technical discussions curated
 
 ## Contact
 
-- Organizer Telegram: [${TELEGRAM_HANDLE}](${TELEGRAM_URL})
 - Calendar: ${SITE}/calendar.ics
 - Timezone: ${TIMEZONE_LABEL} (${TIMEZONE})
 

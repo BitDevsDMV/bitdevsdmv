@@ -28,9 +28,8 @@ UI: Bootstrap 5 + Font Awesome, navy/orange BitDevs DMV brand.
 - [`/calendar.ics`](https://bitdevsdmv.com/calendar.ics) — calendar subscribe (ET)
 - HTML pages link `rel="describedby"` → llms.txt and `rel="alternate" type="text/markdown"` where applicable
 
-## Contact & timezone
+## Timezone
 
-- Telegram: [@secsovereign](https://t.me/secsovereign)
 - All event times are **ET** (`America/New_York`)
 
 ## Canonical history

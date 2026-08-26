@@ -6,7 +6,6 @@ import {
   organizationJsonLd,
   websiteJsonLd,
 } from '../lib/seo';
-import { TELEGRAM_HANDLE, TELEGRAM_URL } from '../lib/events';
 
 interface Props {
   title?: string;
@@ -184,9 +183,6 @@ const structured = [
             </div>
             <div class="col-lg-6">
               <div class="d-flex flex-wrap gap-4 justify-content-lg-end">
-                <a href={TELEGRAM_URL} rel="noopener noreferrer">
-                  <i class="fa-brands fa-telegram me-2" aria-hidden="true"></i>{TELEGRAM_HANDLE}
-                </a>
                 <a href="/calendar.ics">
                   <i class="fa-regular fa-calendar-plus me-2" aria-hidden="true"></i>Calendar
                 </a>

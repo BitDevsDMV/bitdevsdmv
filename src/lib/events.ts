@@ -6,8 +6,6 @@ export type EventEntry = CollectionEntry<'events'>;
 
 export const TIMEZONE = site.timezone;
 export const TIMEZONE_LABEL = site.timezoneLabel;
-export const TELEGRAM_URL = site.telegram;
-export const TELEGRAM_HANDLE = site.telegramHandle;
 
 export type HistoricalEvent = {
   number: number;
