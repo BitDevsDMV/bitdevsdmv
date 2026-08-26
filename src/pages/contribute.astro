@@ -1,0 +1,85 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SuggestForm from '../components/SuggestForm.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { breadcrumbJsonLd, webPageJsonLd } from '../lib/seo';
+
+const apiUrl =
+  import.meta.env.PUBLIC_SUGGEST_API_URL?.replace(/\/$/, '') ||
+  'https://bitdevsdmv-suggest.workers.dev';
+
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Suggest topics' },
+];
+
+const description =
+  'Suggest primary-source Bitcoin topics for the next BitDevs DMV Socratic Seminar reading room.';
+---
+
+<BaseLayout
+  title="Suggest topics"
+  description={description}
+  jsonLd={[
+    webPageJsonLd({ title: 'Suggest topics', description, path: '/contribute' }),
+    breadcrumbJsonLd(crumbs),
+  ]}
+>
+  <section class="page-hero">
+    <div class="container">
+      <Breadcrumbs crumbs={crumbs} />
+      <p class="section-kicker">Participate</p>
+      <h1 class="display-5 mb-3">Suggest topics</h1>
+      <p class="mb-0">
+        Great seminars are curated, not improvised. Send a primary source and the hosts will
+        consider it for the next reading room.
+      </p>
+    </div>
+  </section>
+
+  <section class="pb-5">
+    <div class="container">
+      <div class="row justify-content-center g-4">
+        <div class="col-lg-10 col-xl-9">
+          <div class="paper-panel p-4 p-md-5 mb-4">
+            <h2 class="h4 mb-3" style="font-family: var(--font-display); color: var(--paper-ink);">
+              Submit a suggestion
+            </h2>
+            <SuggestForm apiUrl={apiUrl} />
+          </div>
+
+          <div class="paper-panel p-4 p-md-5 prose">
+            <h2>What to send</h2>
+            <p>Link the source itself — not a summary thread — when you can:</p>
+            <ul>
+              <li>Bitcoin Core / LDK / LND / CLN pull requests with substantial changes</li>
+              <li>Mailing list posts and Bitcoin Optech notes</li>
+              <li>Research papers, BIPs, BOLTs</li>
+              <li>Network data, vulnerability disclosures, release notes</li>
+            </ul>
+
+            <h2>How we organize topics</h2>
+            <p>Event pages follow BitDevs newsletter-style sections:</p>
+            <ul>
+              <li>Announcements</li>
+              <li>Mailing Lists, Meetings and Bitcoin Optech</li>
+              <li>Network Data</li>
+              <li>Research</li>
+              <li>InfoSec</li>
+              <li>Pull Requests and repo updates</li>
+              <li>New Releases</li>
+              <li>Mining</li>
+              <li>Miscellaneous</li>
+            </ul>
+
+            <h2>Presentations</h2>
+            <p>
+              Short, technical demos after discussion are welcome when they fit the room. Reach out
+              early; the bar is relevance to Bitcoin protocol work, not marketing.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

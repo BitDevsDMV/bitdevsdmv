@@ -1,0 +1,20 @@
+---
+import { formatEventDateLong, formatRelativeDate, toDateIso } from '../lib/events';
+
+interface Props {
+  date: Date;
+  /** Stack relative under the date (event lists) vs inline (hero/meta). */
+  stacked?: boolean;
+  class?: string;
+}
+
+const { date, stacked = false, class: className = '' } = Astro.props;
+const iso = toDateIso(date);
+const absolute = formatEventDateLong(date);
+const relative = formatRelativeDate(date);
+---
+
+<span class:list={['event-when', stacked && 'event-when-stacked', className]}>
+  <time class="event-date" datetime={iso}>{absolute}</time>
+  <span class="event-relative" data-relative-date={iso}>{relative}</span>
+</span>

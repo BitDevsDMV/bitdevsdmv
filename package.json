@@ -1,0 +1,30 @@
+{
+  "name": "bitdevsdmv",
+  "type": "module",
+  "version": "0.0.1",
+  "description": "BitDevs DMV — Socratic Seminars for Bitcoin in DC, Maryland, and Virginia",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "worker:dev": "wrangler dev -c workers/suggest/wrangler.toml",
+    "worker:deploy": "wrangler deploy -c workers/suggest/wrangler.toml"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^7.3.1",
+    "astro": "^7.2.7",
+    "bootstrap": "^5.3.8"
+  },
+  "allowScripts": {
+    "esbuild": true
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "5.20260826.1",
+    "typescript": "7.0.2",
+    "wrangler": "4.126.0"
+  }
+}

@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# LLM / agent discovery (https://llmstxt.org/)
+Allow: /llms.txt
+Allow: /llms-full.txt
+Allow: /*.md$
+Allow: /events.json
+
+Sitemap: https://bitdevsdmv.com/sitemap.xml

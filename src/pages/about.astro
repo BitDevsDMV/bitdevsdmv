@@ -1,0 +1,100 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { TELEGRAM_HANDLE, TELEGRAM_URL, TIMEZONE_LABEL } from '../lib/events';
+import { breadcrumbJsonLd, webPageJsonLd } from '../lib/seo';
+
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'About' },
+];
+
+const description =
+  'What BitDevs DMV is: technical Bitcoin Socratic Seminars in DC, Maryland, and Virginia — and what it is not.';
+---
+
+<BaseLayout
+  title="About"
+  description={description}
+  jsonLd={[
+    webPageJsonLd({ title: 'About BitDevs DMV', description, path: '/about', type: 'AboutPage' }),
+    breadcrumbJsonLd(crumbs),
+  ]}
+>
+  <section class="page-hero">
+    <div class="container">
+      <Breadcrumbs crumbs={crumbs} />
+      <p class="section-kicker">Chapter</p>
+      <h1 class="display-5 mb-3">About BitDevs DMV</h1>
+      <p class="mb-0">
+        A community for people who want to discuss — and participate in — Bitcoin protocol research
+        and development in the DMV.
+      </p>
+    </div>
+  </section>
+
+  <section class="pb-5">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-9">
+          <div class="paper-panel p-4 p-md-5 prose">
+            <p>
+              <strong>BitDevs DMV</strong> hosts monthly Socratic Seminars: open, technical
+              discussions curated from pull requests, mailing lists, research, Optech, and network
+              data. We are the DMV chapter at
+              <a href="https://bitdevsdmv.com">bitdevsdmv.com</a>.
+            </p>
+
+            <h2>What a Socratic Seminar is</h2>
+            <p>
+              Instead of a lecture series, BitDevs events are discussion-first. Organizers and
+              attendees collate primary sources ahead of time. At the meetup, the room works through
+              those sources together — questioning assumptions, comparing implementations, and
+              learning in public without turning the conversation into content.
+            </p>
+            <p>
+              The format is used by independent chapters worldwide. Like open-source software with a
+              liberal license, the name and format are free for local communities to adapt. There is
+              no central authority over chapters.
+            </p>
+
+            <h2>Who should come</h2>
+            <p>
+              Engineers, researchers, operators, and serious learners. Newcomers are welcome if they
+              arrive ready for technical discussion. We do not re-teach Bitcoin fundamentals every
+              month; we do contextualize new mechanisms when they appear.
+            </p>
+
+            <h2>What we are not</h2>
+            <p>
+              This is not an investor mixer, a recruiting fair, or a price-talk meetup. Pitch decks
+              and altcoin promotion do not belong here. If you want networking theater, this is the
+              wrong room.
+            </p>
+
+            <h2>Contact</h2>
+            <p>
+              Organizer Telegram:{' '}
+              <a href={TELEGRAM_URL} rel="noopener noreferrer">{TELEGRAM_HANDLE}</a>
+              (also listed on
+              <a href="https://secsov.com/" rel="noopener noreferrer">secsov.com</a>).
+              Event times are Eastern Time ({TIMEZONE_LABEL}). Subscribe via{' '}
+              <a href="/calendar.ics">calendar.ics</a>.
+            </p>
+
+            <h2>Read next</h2>
+            <ul>
+              <li><a href="/rules">Ground rules</a></li>
+              <li><a href="/contribute">How to suggest topics</a></li>
+              <li>
+                <a href="https://www.bitdevsmap.org/" rel="noopener noreferrer">
+                  BitDevs chapters around the world
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,66 @@
+---
+import type { Crumb } from '../lib/seo';
+
+interface Props {
+  crumbs: Crumb[];
+}
+
+const { crumbs } = Astro.props;
+---
+
+{
+  crumbs.length > 0 && (
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <ol class="breadcrumb mb-0">
+        {crumbs.map((crumb, index) => {
+          const last = index === crumbs.length - 1;
+          return (
+            <li class:list={['breadcrumb-item', last && 'active']} aria-current={last ? 'page' : undefined}>
+              {last || !crumb.href ? (
+                <span>{crumb.name}</span>
+              ) : (
+                <a href={crumb.href}>{crumb.name}</a>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
+  )
+}
+
+<style>
+  .breadcrumbs {
+    margin-bottom: 1rem;
+  }
+
+  .breadcrumbs .breadcrumb {
+    background: transparent;
+    padding: 0;
+    font-size: 0.86rem;
+  }
+
+  .breadcrumbs .breadcrumb-item a {
+    color: var(--muted);
+    text-decoration: none;
+  }
+
+  .breadcrumbs .breadcrumb-item a:hover {
+    color: var(--signal-hot);
+  }
+
+  .breadcrumbs .breadcrumb-item.active {
+    color: var(--muted);
+  }
+
+  .breadcrumbs .breadcrumb-item + .breadcrumb-item::before {
+    color: var(--muted);
+    content: "›";
+    float: none;
+    padding-inline: 0.35rem 0.55rem;
+  }
+
+  .page-hero .breadcrumbs {
+    margin-bottom: 0.85rem;
+  }
+</style>

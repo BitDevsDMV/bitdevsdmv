@@ -1,0 +1,59 @@
+---
+interface Props {
+  tags: string[];
+}
+
+const { tags } = Astro.props;
+---
+
+{
+  tags.length > 0 && (
+    <div class="tag-bar mb-4" data-tag-filter>
+      <div class="form-label mb-2">
+        <i class="fa-solid fa-filter me-1" aria-hidden="true" />
+        Filter by tag
+      </div>
+      <div class="d-flex flex-wrap gap-2">
+        <button type="button" class="badge rounded-pill badge-tag active" data-tag="all" aria-pressed="true">
+          all
+        </button>
+        {tags.map((tag) => (
+          <button type="button" class="badge rounded-pill badge-tag" data-tag={tag} aria-pressed="false">
+            {tag}
+          </button>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+<script>
+  const root = document.querySelector('[data-tag-filter]');
+  if (root) {
+    const buttons = [...root.querySelectorAll<HTMLButtonElement>('[data-tag]')];
+    const items = [...document.querySelectorAll<HTMLElement>('[data-event-tags]')];
+
+    const apply = (tag: string) => {
+      for (const button of buttons) {
+        const active = button.dataset.tag === tag;
+        button.classList.toggle('active', active);
+        button.setAttribute('aria-pressed', active ? 'true' : 'false');
+      }
+      for (const item of items) {
+        const list = (item.dataset.eventTags || '')
+          .split(',')
+          .map((t) => t.trim())
+          .filter(Boolean);
+        const show = tag === 'all' || list.includes(tag);
+        item.dataset.hidden = show ? 'false' : 'true';
+      }
+    };
+
+    root.addEventListener('click', (event) => {
+      const target = event.target as HTMLElement | null;
+      const button = target?.closest<HTMLButtonElement>('button[data-tag]');
+      if (!button?.dataset.tag) return;
+      apply(button.dataset.tag);
+    });
+  }
+</script>

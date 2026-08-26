@@ -1,0 +1,165 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EventRow from '../components/EventRow.astro';
+import EventWhen from '../components/EventWhen.astro';
+import { getNextEvent, getPublishedEvents, isUpcomingOrToday } from '../lib/events';
+import { DEFAULT_DESCRIPTION, webPageJsonLd } from '../lib/seo';
+
+const next = await getNextEvent();
+const events = await getPublishedEvents();
+const recent = events.slice(0, 6);
+const featuredIsUpcoming = next ? isUpcomingOrToday(next.data.date) : false;
+---
+
+<BaseLayout
+  title="BitDevs DMV"
+  description={DEFAULT_DESCRIPTION}
+  jsonLd={webPageJsonLd({
+    title: 'BitDevs DMV',
+    description: DEFAULT_DESCRIPTION,
+    path: '/',
+  })}
+>
+  <section class="hero">
+    <div class="container position-relative">
+      <div class="row align-items-center g-4 g-xl-5">
+        <div class="col-lg-6 hero-brand text-center text-lg-start">
+          <img
+            class="hero-logo mx-auto mx-lg-0 mb-3 mb-lg-4"
+            src="/brand/bitdevs-dmv-logo.png"
+            alt="BitDevs DMV logo: Bitcoin mark crowned by the Capitol dome, circuit nodes, and three DC stars"
+            width="480"
+            height="480"
+          />
+          <h1 class="hero-title">BitDevs DMV</h1>
+          <p class="hero-lede mt-3 mb-0 mx-auto mx-lg-0">
+            Socratic seminars on Bitcoin protocol research and development across DC, Maryland, and
+            Virginia.
+          </p>
+        </div>
+
+        <div class="col-lg-6">
+          <aside class="hero-next" aria-label="Next seminar">
+            {
+              next ? (
+                <>
+                  <p class="eyebrow">
+                    {featuredIsUpcoming ? <span class="pulse" aria-hidden="true" /> : null}
+                    {featuredIsUpcoming ? 'Next seminar' : 'Latest seminar'}
+                  </p>
+                  <h2>{next.data.title}</h2>
+                  <div class="hero-meta mt-3 mb-4">
+                    <div class="d-flex flex-wrap align-items-baseline gap-2">
+                      <i class="fa-regular fa-calendar" aria-hidden="true" />
+                      <EventWhen date={next.data.date} />
+                    </div>
+                    {next.data.venue ? (
+                      <div class="mt-1">
+                        <i class="fa-solid fa-location-dot me-2" aria-hidden="true" />
+                        {next.data.venue}
+                      </div>
+                    ) : null}
+                  </div>
+                  <div class="d-flex flex-wrap gap-2 mt-auto">
+                    <a class="btn btn-primary" href={`/events/${next.id}`}>
+                      <i class="fa-solid fa-book-open" aria-hidden="true" />
+                      Read topics
+                    </a>
+                    {next.data.rsvp ? (
+                      <a
+                        class="btn btn-outline-light"
+                        href={next.data.rsvp}
+                        rel="noopener noreferrer"
+                        target="_blank"
+                      >
+                        <i class="fa-solid fa-ticket" aria-hidden="true" />
+                        RSVP
+                      </a>
+                    ) : (
+                  <a class="btn btn-outline-light" href="/contribute">
+                        <i class="fa-solid fa-plus" aria-hidden="true" />
+                        Suggest a topic
+                      </a>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p class="eyebrow">
+                    <i class="fa-regular fa-calendar" aria-hidden="true" />
+                    Calendar
+                  </p>
+                  <h2>Seminar schedule coming soon</h2>
+                  <p class="hero-meta mt-3 mb-4">Watch this space — or suggest a topic.</p>
+                  <a class="btn btn-primary" href="/contribute">
+                    <i class="fa-solid fa-plus" aria-hidden="true" />
+                    Suggest a topic
+                  </a>
+                </>
+              )
+            }
+          </aside>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="rules-strip section-enter py-4 py-md-5">
+    <div class="container">
+      <div class="row g-4">
+        <div class="col-md-4 rule">
+          <div class="rule-icon" aria-hidden="true">
+            <i class="fa-solid fa-user-secret"></i>
+          </div>
+          <h3>Chatham House</h3>
+          <p>Share what was said, not who said it.</p>
+        </div>
+        <div class="col-md-4 rule">
+          <div class="rule-icon" aria-hidden="true">
+            <i class="fa-solid fa-ban"></i>
+          </div>
+          <h3>No recordings</h3>
+          <p>No photos, video, or audio of the discussion.</p>
+        </div>
+        <div class="col-md-4 rule">
+          <div class="rule-icon" aria-hidden="true">
+            <i class="fa-solid fa-code"></i>
+          </div>
+          <h3>Technical bar</h3>
+          <p>Discussion stays on Bitcoin protocols, not price or pitch decks.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="py-5 section-enter">
+    <div class="container">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-4">
+        <div>
+          <p class="section-kicker mb-2">Archive</p>
+          <h2 class="section-title mb-2">Recent seminars</h2>
+          <p class="text-muted-brand mb-0" style="max-width: 34rem;">
+            Each event page is a reading room — curated primary sources so you can prepare before
+            you walk in.
+          </p>
+        </div>
+        <a class="btn btn-outline-light btn-sm" href="/events">
+          Full archive
+          <i class="fa-solid fa-arrow-right" aria-hidden="true" />
+        </a>
+      </div>
+
+      {
+        recent.length > 0 ? (
+          <div class="list-group list-group-flush event-list">
+            {recent.map((event) => (
+              <EventRow event={event} />
+            ))}
+          </div>
+        ) : (
+          <p class="font-mono text-muted-brand mb-0">No seminars published yet.</p>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,19 @@
+name = "bitdevsdmv-suggest"
+main = "src/index.ts"
+compatibility_date = "2026-08-01"
+workers_dev = true
+
+# Optional custom route after DNS is on Cloudflare:
+# routes = [{ pattern = "api.bitdevsdmv.com/*", zone_name = "bitdevsdmv.com" }]
+
+[[kv_namespaces]]
+binding = "SUGGESTIONS"
+id = "REPLACE_WITH_KV_NAMESPACE_ID"
+preview_id = "REPLACE_WITH_KV_PREVIEW_ID"
+
+[vars]
+# Comma-separated browser origins allowed to call the API
+ALLOWED_ORIGINS = "https://bitdevsdmv.com,http://127.0.0.1:4321,http://localhost:4321"
+# Max submissions per IP per window
+RATE_LIMIT_MAX = "3"
+RATE_LIMIT_WINDOW_SECONDS = "3600"

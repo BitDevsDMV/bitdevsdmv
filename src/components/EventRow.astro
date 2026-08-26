@@ -1,0 +1,32 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import EventWhen from './EventWhen.astro';
+
+interface Props {
+  event: CollectionEntry<'events'>;
+  attrs?: Record<string, string>;
+}
+
+const { event, attrs = {} } = Astro.props;
+---
+
+<a class="list-group-item list-group-item-action" href={`/events/${event.id}`} {...attrs}>
+  <div class="d-flex flex-column flex-sm-row gap-2 gap-sm-4 align-items-sm-center">
+    <EventWhen date={event.data.date} stacked />
+    <span class="flex-grow-1">
+      <span class="event-title d-block">{event.data.title}</span>
+      {
+        event.data.tags.length > 0 && (
+          <span class="d-flex flex-wrap gap-1 mt-2">
+            {event.data.tags.map((tag) => (
+              <span class="badge rounded-pill badge-tag">{tag}</span>
+            ))}
+          </span>
+        )
+      }
+    </span>
+    <span class="text-muted-brand d-none d-sm-inline" aria-hidden="true">
+      <i class="fa-solid fa-arrow-right"></i>
+    </span>
+  </div>
+</a>

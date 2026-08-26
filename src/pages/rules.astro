@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { breadcrumbJsonLd, webPageJsonLd } from '../lib/seo';
+
+const crumbs = [
+  { name: 'Home', href: '/' },
+  { name: 'Ground rules' },
+];
+
+const description =
+  'BitDevs DMV ground rules: Chatham House Rule, no photos or recordings, and a technical bar for Bitcoin protocol discussion.';
+---
+
+<BaseLayout
+  title="Ground rules"
+  description={description}
+  jsonLd={[
+    webPageJsonLd({ title: 'Ground rules', description, path: '/rules' }),
+    breadcrumbJsonLd(crumbs),
+  ]}
+>
+  <section class="page-hero">
+    <div class="container">
+      <Breadcrumbs crumbs={crumbs} />
+      <p class="section-kicker">Culture</p>
+      <h1 class="display-5 mb-3">Ground rules</h1>
+      <p class="mb-0">
+        These rules exist so people can speak freely and the room stays useful for protocol work.
+      </p>
+    </div>
+  </section>
+
+  <section class="pb-5">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-10 col-xl-9">
+          <div class="paper-panel p-4 p-md-5 prose">
+            <h2>1. Chatham House Rule</h2>
+            <p>
+              Participants are free to use the information received, but neither the identity nor
+              the affiliation of the speaker(s), nor that of any other participant, may be revealed.
+            </p>
+
+            <h2>2. No photos, video, or recordings</h2>
+            <p>
+              The discussion portion of the event is never recorded. Do not photograph or film
+              attendees or the conversation. Notes for yourself are fine; publishing attributable
+              quotes is not.
+            </p>
+
+            <h2>3. Keep it technical</h2>
+            <p>
+              Topics center on Bitcoin and related protocols: consensus changes, implementations,
+              cryptography, privacy, mining, Lightning, and operational research. Market talk, token
+              pitches, and recruitment spam get cut short.
+            </p>
+
+            <h2>4. Respect the room</h2>
+            <p>
+              Argue ideas hard; treat people carefully. Circular culture-war debates and tired
+              rehashes (with no new technical content) will be steered away by the host.
+            </p>
+
+            <h2>5. Come prepared when you can</h2>
+            <p>
+              The event page is a reading room. Skimming the linked primary sources before you
+              arrive makes the seminar better for everyone — including you.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
