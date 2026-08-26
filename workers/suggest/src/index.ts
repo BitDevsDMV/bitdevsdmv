@@ -3,6 +3,12 @@ export interface Env {
   ALLOWED_ORIGINS: string;
   RATE_LIMIT_MAX: string;
   RATE_LIMIT_WINDOW_SECONDS: string;
+  /** Where suggestion emails go */
+  NOTIFY_EMAIL_TO: string;
+  /** From address (must be allowed by your Resend domain) */
+  NOTIFY_EMAIL_FROM: string;
+  /** Resend API key — set via `wrangler secret put RESEND_API_KEY` */
+  RESEND_API_KEY?: string;
   /** Optional Discord/Slack incoming webhook */
   NOTIFY_WEBHOOK?: string;
   /** Bearer token for GET /suggestions */
@@ -18,6 +24,18 @@ interface SuggestBody {
   /** Honeypot — must stay empty */
   website?: string;
 }
+
+type SuggestionRecord = {
+  id: string;
+  createdAt: string;
+  title: string;
+  url: string;
+  why: string | null;
+  section: string | null;
+  contact: string | null;
+  ip: string;
+  userAgent: string | null;
+};
 
 const SECTIONS = new Set([
   'Announcements',
@@ -79,6 +97,14 @@ function isHttpUrl(value: string): boolean {
   }
 }
 
+function escapeHtml(value: string): string {
+  return value
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;');
+}
+
 async function rateLimited(env: Env, ip: string): Promise<boolean> {
   const max = Number(env.RATE_LIMIT_MAX || '3');
   const windowSec = Number(env.RATE_LIMIT_WINDOW_SECONDS || '3600');
@@ -108,6 +134,54 @@ async function rateLimited(env: Env, ip: string): Promise<boolean> {
     { expirationTtl: Math.max(windowSec, 60) },
   );
   return false;
+}
+
+async function sendSuggestionEmail(env: Env, record: SuggestionRecord): Promise<void> {
+  if (!env.RESEND_API_KEY || !env.NOTIFY_EMAIL_TO || !env.NOTIFY_EMAIL_FROM) return;
+
+  const lines = [
+    'New BitDevs DMV topic suggestion',
+    '',
+    `Title: ${record.title}`,
+    `URL: ${record.url}`,
+    record.why ? `Why: ${record.why}` : null,
+    record.section ? `Section: ${record.section}` : null,
+    record.contact ? `Contact: ${record.contact}` : null,
+    '',
+    `Id: ${record.id}`,
+    `Submitted: ${record.createdAt}`,
+  ].filter((line) => line !== null);
+
+  const text = lines.join('\n');
+  const html = `
+    <h2>New BitDevs DMV topic suggestion</h2>
+    <p><strong>${escapeHtml(record.title)}</strong></p>
+    <p><a href="${escapeHtml(record.url)}">${escapeHtml(record.url)}</a></p>
+    ${record.why ? `<p><em>Why:</em> ${escapeHtml(record.why)}</p>` : ''}
+    ${record.section ? `<p><em>Section:</em> ${escapeHtml(record.section)}</p>` : ''}
+    ${record.contact ? `<p><em>Contact:</em> ${escapeHtml(record.contact)}</p>` : ''}
+    <p style="color:#666;font-size:12px">Id: ${escapeHtml(record.id)} · ${escapeHtml(record.createdAt)}</p>
+  `.trim();
+
+  const res = await fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${env.RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: env.NOTIFY_EMAIL_FROM,
+      to: [env.NOTIFY_EMAIL_TO],
+      subject: `BitDevs DMV suggestion: ${record.title}`.slice(0, 200),
+      text,
+      html,
+    }),
+  });
+
+  if (!res.ok) {
+    const detail = await res.text().catch(() => '');
+    console.error('Resend email failed', res.status, detail.slice(0, 500));
+  }
 }
 
 async function handleSuggest(request: Request, env: Env, cors: HeadersInit): Promise<Response> {
@@ -152,7 +226,7 @@ async function handleSuggest(request: Request, env: Env, cors: HeadersInit): Pro
 
   const id = crypto.randomUUID();
   const createdAt = new Date().toISOString();
-  const record = {
+  const record: SuggestionRecord = {
     id,
     createdAt,
     title,
@@ -166,6 +240,12 @@ async function handleSuggest(request: Request, env: Env, cors: HeadersInit): Pro
 
   await env.SUGGESTIONS.put(`suggestion:${id}`, JSON.stringify(record));
   await env.SUGGESTIONS.put(`suggestion-index:${createdAt}:${id}`, id);
+
+  try {
+    await sendSuggestionEmail(env, record);
+  } catch (err) {
+    console.error('Email notify threw', err);
+  }
 
   if (env.NOTIFY_WEBHOOK) {
     const text = [

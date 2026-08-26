@@ -1,6 +1,6 @@
 # BitDevs DMV — topic suggestion Worker
 
-Cloudflare Worker backend for `/contribute` form submissions.
+Cloudflare Worker backend for `/contribute` form submissions. Stores suggestions in KV and emails **josh@mybitcoinfuture.com** via [Resend](https://resend.com).
 
 ## Endpoints
 
@@ -21,7 +21,24 @@ npx wrangler kv namespace create SUGGESTIONS --preview
 
 Put the returned IDs into [`wrangler.toml`](./wrangler.toml) (`id` / `preview_id`).
 
-Optional secrets:
+### Email (Resend)
+
+1. Create a free account at [resend.com](https://resend.com) and copy an API key.
+2. Until `bitdevsdmv.com` is verified in Resend, keep `NOTIFY_EMAIL_FROM = "BitDevs DMV <onboarding@resend.dev>"` (Resend only delivers to the account owner email in that mode — verify the domain ASAP for josh@).
+3. Prefer verifying `bitdevsdmv.com` in Resend, then set:
+
+```toml
+NOTIFY_EMAIL_FROM = "BitDevs DMV <noreply@bitdevsdmv.com>"
+NOTIFY_EMAIL_TO = "josh@mybitcoinfuture.com"
+```
+
+4. Store the API key:
+
+```sh
+npx wrangler secret put RESEND_API_KEY -c workers/suggest/wrangler.toml
+```
+
+Optional extras:
 
 ```sh
 npx wrangler secret put ADMIN_TOKEN -c workers/suggest/wrangler.toml
@@ -37,6 +54,10 @@ npm run worker:deploy
 Local:
 
 ```sh
+# .dev.vars next to wrangler.toml
+RESEND_API_KEY=re_xxx
+ADMIN_TOKEN=dev-token
+
 npm run worker:dev
 ```
 
@@ -45,7 +66,7 @@ npm run worker:dev
 Set the Astro public env (build-time) to the Worker URL:
 
 ```sh
-# .env
+# .env (local) and GitHub Actions / Pages build secret
 PUBLIC_SUGGEST_API_URL=https://bitdevsdmv-suggest.<account>.workers.dev
 ```
 

@@ -1,0 +1,3 @@
+# Local Worker secrets (gitignored via .env.*)
+RESEND_API_KEY=
+ADMIN_TOKEN=

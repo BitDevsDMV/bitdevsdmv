@@ -8,12 +8,16 @@ workers_dev = true
 
 [[kv_namespaces]]
 binding = "SUGGESTIONS"
-id = "REPLACE_WITH_KV_NAMESPACE_ID"
-preview_id = "REPLACE_WITH_KV_PREVIEW_ID"
+id = "37aea5e7d87148fe94d0ae12bde17703"
+preview_id = "023449e09b7848b6a7e651ba6590f466"
 
 [vars]
 # Comma-separated browser origins allowed to call the API
-ALLOWED_ORIGINS = "https://bitdevsdmv.com,http://127.0.0.1:4321,http://localhost:4321"
+ALLOWED_ORIGINS = "https://bitdevsdmv.com,https://www.bitdevsdmv.com,http://127.0.0.1:4321,http://localhost:4321"
 # Max submissions per IP per window
 RATE_LIMIT_MAX = "3"
 RATE_LIMIT_WINDOW_SECONDS = "3600"
+# Email notify (Resend)
+NOTIFY_EMAIL_TO = "josh@mybitcoinfuture.com"
+# After verifying bitdevsdmv.com in Resend, switch FROM to e.g. BitDevs DMV <noreply@bitdevsdmv.com>
+NOTIFY_EMAIL_FROM = "BitDevs DMV <onboarding@resend.dev>"
