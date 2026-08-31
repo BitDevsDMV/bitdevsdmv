@@ -40,16 +40,11 @@ NOTIFY_EMAIL_TO = "josh@mybitcoinfuture.com"
 npx wrangler secret put RESEND_API_KEY -c workers/suggest/wrangler.toml
 ```
 
-### Notify without Resend (easiest: ntfy)
+### Notify (Zeus runner → ntfy)
 
-No email account. On your phone, install [ntfy](https://ntfy.sh/) and subscribe to a long random topic name (treat it like a password). Then:
+Do not publish from the Cloudflare Worker to `ntfy.sh` (shared CF egress IPs hit the free quota). Send via the self-hosted runner on Zeus: [`.github/workflows/ntfy.yml`](../../.github/workflows/ntfy.yml).
 
-```sh
-npx wrangler secret put NOTIFY_WEBHOOK -c workers/suggest/wrangler.toml
-# paste: https://ntfy.sh/your-long-random-topic
-```
-
-A Discord channel webhook URL works the same way (`https://discord.com/api/webhooks/…`).
+Repo secret `NTFY_URL` = `https://ntfy.sh/<topic>`. Dispatch with `event_type: ntfy`.
 
 ```sh
 npx wrangler secret put ADMIN_TOKEN -c workers/suggest/wrangler.toml

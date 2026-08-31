@@ -1,0 +1,95 @@
+# Zeus self-hosted runner → ntfy.sh
+# Zeus only makes outbound calls (GitHub + ntfy). No inbound ports.
+#
+# Triggers:
+#   - Actions UI: workflow_dispatch
+#   - API: POST /repos/BitDevsDMV/bitdevsdmv/dispatches
+#     { "event_type": "ntfy", "client_payload": { "title": "...", "message": "..." } }
+
+name: ntfy
+
+on:
+  workflow_dispatch:
+    inputs:
+      title:
+        description: Notification title
+        required: true
+        default: BitDevs DMV
+      message:
+        description: Notification body
+        required: true
+  repository_dispatch:
+    types: [ntfy]
+
+permissions: {}
+
+concurrency:
+  group: ntfy
+  cancel-in-progress: false
+
+jobs:
+  send:
+    name: Send via Zeus
+    runs-on: self-hosted
+    timeout-minutes: 3
+    steps:
+      - name: Publish to ntfy
+        env:
+          NTFY_URL: ${{ secrets.NTFY_URL }}
+          NTFY_TITLE: ${{ github.event.inputs.title || github.event.client_payload.title || 'BitDevs DMV' }}
+          NTFY_MESSAGE: ${{ github.event.inputs.message || github.event.client_payload.message }}
+          NTFY_TAGS: ${{ github.event.client_payload.tags || 'mailbox_with_mail,bitcoin' }}
+        run: |
+          set -euo pipefail
+          if [ -n "${NTFY_URL:-}" ]; then
+            echo "::add-mask::${NTFY_URL}"
+          fi
+          python3 - <<'PY'
+          import json
+          import os
+          import sys
+          import urllib.error
+          import urllib.request
+          from urllib.parse import urlparse
+
+          raw = os.environ.get("NTFY_URL", "").strip()
+          if not raw:
+              sys.exit("NTFY_URL secret is not set")
+
+          message = (os.environ.get("NTFY_MESSAGE") or "").strip()
+          if not message:
+              sys.exit("message is empty")
+
+          title = (os.environ.get("NTFY_TITLE") or "BitDevs DMV").strip() or "BitDevs DMV"
+          tags = [t.strip() for t in (os.environ.get("NTFY_TAGS") or "").split(",") if t.strip()]
+
+          parsed = urlparse(raw)
+          if parsed.scheme not in ("http", "https") or not parsed.netloc:
+              sys.exit("NTFY_URL must be an http(s) URL with a topic path")
+          topic = parsed.path.strip("/").split("/")[0] if parsed.path else ""
+          if not topic:
+              sys.exit("NTFY_URL is missing the topic path")
+
+          body = json.dumps(
+              {
+                  "topic": topic,
+                  "title": title[:80],
+                  "message": message[:1900],
+                  "tags": tags or ["mailbox_with_mail", "bitcoin"],
+              }
+          ).encode()
+
+          req = urllib.request.Request(
+              f"{parsed.scheme}://{parsed.netloc}",
+              data=body,
+              method="POST",
+              headers={"Content-Type": "application/json"},
+          )
+          try:
+              with urllib.request.urlopen(req, timeout=20) as resp:
+                  if resp.status >= 400:
+                      sys.exit(f"ntfy HTTP {resp.status}")
+          except urllib.error.HTTPError as err:
+              sys.exit(f"ntfy HTTP {err.code}")
+          print("ntfy sent")
+          PY
