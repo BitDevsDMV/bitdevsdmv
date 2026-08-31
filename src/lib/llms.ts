@@ -218,7 +218,7 @@ Link the source itself when you can:
 
 ## API
 
-The form posts JSON to a Cloudflare Worker (\`POST /suggest\`). The Worker stores the suggestion and asks Zeus to send ntfy. Do not use GitHub issues for topic suggestions.
+The form posts JSON to a Cloudflare Worker (\`POST /suggest\`). The Worker stores the suggestion and a GitHub Action sends ntfy. Do not use GitHub issues for topic suggestions.
 
 ## Sections used on event pages
 

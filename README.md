@@ -42,7 +42,7 @@ Canonical URLs, Open Graph / Twitter cards, `robots.txt`, prioritized `sitemap.x
 
 ## Suggest topics API
 
-GitHub issues are not used. Submissions go to a Cloudflare Worker (`workers/suggest/`) → KV, then Zeus’s self-hosted runner publishes ntfy.
+GitHub issues are not used. Submissions go to a Cloudflare Worker (`workers/suggest/`) → KV, then a GitHub-hosted Action publishes ntfy.
 
 See [workers/suggest/README.md](workers/suggest/README.md).
 

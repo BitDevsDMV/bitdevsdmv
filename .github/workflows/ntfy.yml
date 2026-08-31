@@ -1,5 +1,5 @@
-# Zeus self-hosted runner → ntfy.sh
-# Zeus only makes outbound calls (GitHub + ntfy). No inbound ports.
+# GitHub-hosted runner → ntfy.sh
+# Cloudflare Workers share egress IPs that ntfy.sh rate-limits; Actions does not.
 #
 # Triggers:
 #   - Actions UI: workflow_dispatch
@@ -29,8 +29,8 @@ concurrency:
 
 jobs:
   send:
-    name: Send via Zeus
-    runs-on: self-hosted
+    name: Send ntfy
+    runs-on: ubuntu-latest
     timeout-minutes: 3
     steps:
       - name: Publish to ntfy
