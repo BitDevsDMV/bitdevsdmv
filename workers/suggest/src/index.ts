@@ -184,6 +184,65 @@ async function sendSuggestionEmail(env: Env, record: SuggestionRecord): Promise<
   }
 }
 
+function isNtfyUrl(webhook: string): boolean {
+  try {
+    const host = new URL(webhook).hostname;
+    return host === 'ntfy.sh' || host.endsWith('.ntfy.sh') || host === 'ntfy.cloud' || host.includes('ntfy');
+  } catch {
+    return false;
+  }
+}
+
+async function sendWebhookNotify(webhook: string, record: SuggestionRecord): Promise<void> {
+  const lines = [
+    record.title,
+    record.url,
+    record.why ? `Why: ${record.why}` : null,
+    record.section ? `Section: ${record.section}` : null,
+    record.contact ? `Contact: ${record.contact}` : null,
+    `Id: ${record.id}`,
+  ].filter((line) => line !== null);
+
+  const message = lines.join('\n').slice(0, 1900);
+
+  if (isNtfyUrl(webhook)) {
+    const res = await fetch(webhook, {
+      method: 'POST',
+      headers: {
+        Title: 'BitDevs DMV suggestion',
+        Tags: 'mailbox_with_mail,bitcoin',
+        Priority: 'default',
+      },
+      body: message,
+    });
+    if (!res.ok) {
+      console.error('ntfy notify failed', res.status, (await res.text().catch(() => '')).slice(0, 300));
+    }
+    return;
+  }
+
+  const discordText = [
+    '**New BitDevs DMV topic suggestion**',
+    `**${record.title}**`,
+    record.url,
+    record.why ? `_Why:_ ${record.why}` : null,
+    record.section ? `_Section:_ ${record.section}` : null,
+    record.contact ? `_Contact:_ ${record.contact}` : null,
+    `\`${record.id}\``,
+  ]
+    .filter(Boolean)
+    .join('\n');
+
+  const res = await fetch(webhook, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ content: discordText.slice(0, 1900) }),
+  });
+  if (!res.ok) {
+    console.error('Webhook notify failed', res.status, (await res.text().catch(() => '')).slice(0, 300));
+  }
+}
+
 async function handleSuggest(request: Request, env: Env, cors: HeadersInit): Promise<Response> {
   let body: SuggestBody;
   try {
@@ -248,26 +307,10 @@ async function handleSuggest(request: Request, env: Env, cors: HeadersInit): Pro
   }
 
   if (env.NOTIFY_WEBHOOK) {
-    const text = [
-      '**New BitDevs DMV topic suggestion**',
-      `**${title}**`,
-      url,
-      why ? `_Why:_ ${why}` : null,
-      section ? `_Section:_ ${section}` : null,
-      contact ? `_Contact:_ ${contact}` : null,
-      `\`${id}\``,
-    ]
-      .filter(Boolean)
-      .join('\n');
-
     try {
-      await fetch(env.NOTIFY_WEBHOOK, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: text.slice(0, 1900) }),
-      });
-    } catch {
-      /* don't fail the submit if notify fails */
+      await sendWebhookNotify(env.NOTIFY_WEBHOOK, record);
+    } catch (err) {
+      console.error('Webhook notify threw', err);
     }
   }
 

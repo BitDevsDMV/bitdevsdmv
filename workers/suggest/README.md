@@ -38,11 +38,19 @@ NOTIFY_EMAIL_TO = "josh@mybitcoinfuture.com"
 npx wrangler secret put RESEND_API_KEY -c workers/suggest/wrangler.toml
 ```
 
-Optional extras:
+### Notify without Resend (easiest: ntfy)
+
+No email account. On your phone, install [ntfy](https://ntfy.sh/) and subscribe to a long random topic name (treat it like a password). Then:
+
+```sh
+npx wrangler secret put NOTIFY_WEBHOOK -c workers/suggest/wrangler.toml
+# paste: https://ntfy.sh/your-long-random-topic
+```
+
+A Discord channel webhook URL works the same way (`https://discord.com/api/webhooks/…`).
 
 ```sh
 npx wrangler secret put ADMIN_TOKEN -c workers/suggest/wrangler.toml
-npx wrangler secret put NOTIFY_WEBHOOK -c workers/suggest/wrangler.toml   # Discord webhook URL
 ```
 
 Deploy:
