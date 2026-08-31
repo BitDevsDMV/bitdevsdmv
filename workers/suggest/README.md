@@ -1,8 +1,6 @@
 # BitDevs DMV — topic suggestion Worker
 
-Paused: the public form is off the site. This Worker is kept for a later notify setup.
-
-Cloudflare Worker backend for topic submissions. Stores suggestions in KV.
+Cloudflare Worker backend for `/contribute` form submissions. Stores suggestions in KV. ntfy is sent by the Zeus self-hosted runner ([`.github/workflows/ntfy.yml`](../../.github/workflows/ntfy.yml)), not from this Worker.
 
 ## Endpoints
 
@@ -42,11 +40,13 @@ npx wrangler secret put RESEND_API_KEY -c workers/suggest/wrangler.toml
 
 ### Notify (Zeus runner → ntfy)
 
-Do not publish from the Cloudflare Worker to `ntfy.sh` (shared CF egress IPs hit the free quota). Send via the self-hosted runner on Zeus: [`.github/workflows/ntfy.yml`](../../.github/workflows/ntfy.yml).
+The Worker calls `repository_dispatch` (`event_type: ntfy`). Zeus’s runner posts to ntfy. Do not point this Worker at `ntfy.sh`.
 
-Repo secret `NTFY_URL` = `https://ntfy.sh/<topic>`. Dispatch with `event_type: ntfy`.
+1. Repo **Actions** secret `NTFY_URL` = `https://ntfy.sh/<topic>`
+2. Fine-grained PAT (this repo only, **Contents: Read and write**) stored on the Worker:
 
 ```sh
+npx wrangler secret put GH_DISPATCH_TOKEN -c workers/suggest/wrangler.toml
 npx wrangler secret put ADMIN_TOKEN -c workers/suggest/wrangler.toml
 ```
 

@@ -21,3 +21,4 @@ RATE_LIMIT_WINDOW_SECONDS = "3600"
 NOTIFY_EMAIL_TO = "josh@mybitcoinfuture.com"
 # After verifying bitdevsdmv.com in Resend, switch FROM to e.g. BitDevs DMV <noreply@bitdevsdmv.com>
 NOTIFY_EMAIL_FROM = "BitDevs DMV <onboarding@resend.dev>"
+GH_DISPATCH_REPO = "BitDevsDMV/bitdevsdmv"

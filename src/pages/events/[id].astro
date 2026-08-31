@@ -130,9 +130,9 @@ const eventJsonLd = {
                 )
               }
 
-              {
-                hasRsvp && (
-                  <div class="d-flex flex-wrap gap-2 mt-4">
+              <div class="d-flex flex-wrap gap-2 mt-4">
+                {
+                  hasRsvp && (
                     <a
                       class="btn btn-primary"
                       href={event.data.rsvp}
@@ -142,9 +142,13 @@ const eventJsonLd = {
                       <i class="fa-solid fa-ticket" aria-hidden="true" />
                       RSVP
                     </a>
-                  </div>
-                )
-              }
+                  )
+                }
+                <a class="btn btn-outline-dark" href="/contribute">
+                  <i class="fa-solid fa-plus" aria-hidden="true" />
+                  Suggest a topic
+                </a>
+              </div>
             </header>
 
             <div class="prose">

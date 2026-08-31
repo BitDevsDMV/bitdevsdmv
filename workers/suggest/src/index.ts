@@ -9,8 +9,10 @@ export interface Env {
   NOTIFY_EMAIL_FROM: string;
   /** Resend API key — set via `wrangler secret put RESEND_API_KEY` */
   RESEND_API_KEY?: string;
-  /** Optional Discord/Slack incoming webhook */
-  NOTIFY_WEBHOOK?: string;
+  /** Fine-grained PAT: Contents write on BitDevsDMV/bitdevsdmv */
+  GH_DISPATCH_TOKEN?: string;
+  /** owner/name, default BitDevsDMV/bitdevsdmv */
+  GH_DISPATCH_REPO?: string;
   /** Bearer token for GET /suggestions */
   ADMIN_TOKEN?: string;
 }
@@ -184,72 +186,53 @@ async function sendSuggestionEmail(env: Env, record: SuggestionRecord): Promise<
   }
 }
 
-function isNtfyUrl(webhook: string): boolean {
-  try {
-    const host = new URL(webhook).hostname;
-    return host === 'ntfy.sh' || host.endsWith('.ntfy.sh') || host === 'ntfy.cloud' || host.includes('ntfy');
-  } catch {
-    return false;
-  }
-}
-
-async function sendWebhookNotify(webhook: string, record: SuggestionRecord): Promise<void> {
-  const lines = [
+function suggestionMessage(record: SuggestionRecord): string {
+  return [
     record.title,
     record.url,
     record.why ? `Why: ${record.why}` : null,
     record.section ? `Section: ${record.section}` : null,
     record.contact ? `Contact: ${record.contact}` : null,
     `Id: ${record.id}`,
-  ].filter((line) => line !== null);
+  ]
+    .filter((line) => line !== null)
+    .join('\n')
+    .slice(0, 1900);
+}
 
-  const message = lines.join('\n').slice(0, 1900);
-
-  if (isNtfyUrl(webhook)) {
-    const parsed = new URL(webhook);
-    const topic = parsed.pathname.replace(/^\/+|\/+$/g, '').split('/')[0];
-    if (!topic) {
-      console.error('ntfy notify skipped: no topic in NOTIFY_WEBHOOK');
-      return;
-    }
-    // JSON body — Workers can strip or reject Title/Priority request headers.
-    const res = await fetch(parsed.origin, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        topic,
-        title: 'BitDevs DMV suggestion',
-        message,
-        tags: ['mailbox_with_mail', 'bitcoin'],
-      }),
-    });
-    if (!res.ok) {
-      console.error('ntfy notify failed', res.status, (await res.text().catch(() => '')).slice(0, 300));
-    } else {
-      console.log('ntfy notify ok', topic);
-    }
+async function sendGithubNtfyDispatch(env: Env, record: SuggestionRecord): Promise<void> {
+  if (!env.GH_DISPATCH_TOKEN) {
+    console.error('GH_DISPATCH_TOKEN is not set; skipping ntfy dispatch');
     return;
   }
 
-  const discordText = [
-    '**New BitDevs DMV topic suggestion**',
-    `**${record.title}**`,
-    record.url,
-    record.why ? `_Why:_ ${record.why}` : null,
-    record.section ? `_Section:_ ${record.section}` : null,
-    record.contact ? `_Contact:_ ${record.contact}` : null,
-    `\`${record.id}\``,
-  ]
-    .filter(Boolean)
-    .join('\n');
+  const repo = (env.GH_DISPATCH_REPO || 'BitDevsDMV/bitdevsdmv').trim();
+  if (!/^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/.test(repo)) {
+    console.error('GH_DISPATCH_REPO is invalid');
+    return;
+  }
 
-  const res = await fetch(webhook, {
+  const res = await fetch(`https://api.github.com/repos/${repo}/dispatches`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ content: discordText.slice(0, 1900) }),
+    headers: {
+      Authorization: `Bearer ${env.GH_DISPATCH_TOKEN}`,
+      Accept: 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28',
+      'Content-Type': 'application/json',
+      'User-Agent': 'bitdevsdmv-suggest',
+    },
+    body: JSON.stringify({
+      event_type: 'ntfy',
+      client_payload: {
+        title: 'BitDevs DMV suggestion',
+        message: suggestionMessage(record),
+      },
+    }),
   });
-  if (!res.ok) {
-    console.error('Webhook notify failed', res.status, (await res.text().catch(() => '')).slice(0, 300));
+
+  if (res.status !== 204) {
+    const detail = await res.text().catch(() => '');
+    console.error('GitHub dispatch failed', res.status, detail.slice(0, 300));
   }
 }
 
@@ -316,12 +299,10 @@ async function handleSuggest(request: Request, env: Env, cors: HeadersInit): Pro
     console.error('Email notify threw', err);
   }
 
-  if (env.NOTIFY_WEBHOOK) {
-    try {
-      await sendWebhookNotify(env.NOTIFY_WEBHOOK, record);
-    } catch (err) {
-      console.error('Webhook notify threw', err);
-    }
+  try {
+    await sendGithubNtfyDispatch(env, record);
+  } catch (err) {
+    console.error('GitHub dispatch threw', err);
   }
 
   return json({ ok: true, id }, 201, cors);

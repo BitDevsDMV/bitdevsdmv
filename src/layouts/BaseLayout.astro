@@ -38,6 +38,7 @@ const ogImageUrl = new URL(ogImage, Astro.site).href;
 function defaultMarkdownFor(pathname: string): string | undefined {
   if (pathname === '/about') return '/about.md';
   if (pathname === '/rules') return '/rules.md';
+  if (pathname === '/contribute') return '/contribute.md';
   if (pathname === '/events') return '/events.md';
   if (pathname.startsWith('/events/')) return `${pathname}.md`;
   return undefined;
@@ -147,6 +148,15 @@ const structured = [
                   aria-current={path === '/rules' ? 'page' : undefined}
                 >
                   Ground rules
+                </a>
+              </li>
+              <li class="nav-item">
+                <a
+                  class:list={['nav-link', path === '/contribute' && 'active']}
+                  href="/contribute"
+                  aria-current={path === '/contribute' ? 'page' : undefined}
+                >
+                  Suggest topics
                 </a>
               </li>
             </ul>

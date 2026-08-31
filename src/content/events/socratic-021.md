@@ -23,7 +23,7 @@ draft: false
 
 These rules exist so that BitDevs participants can speak freely within the event. Questions are encouraged, including basic ones!
 
-Full chapter rules: [Ground rules](/rules).
+Full chapter rules: [Ground rules](/rules). Suggest topics: [Suggest topics](/contribute).
 
 ## Location
 
@@ -140,3 +140,7 @@ Thank you to PubKey DC for hosting.
 - [Differential testing](https://docs.thebitcoincommons.org/development/differential-testing.html)
 - [Formal verification](https://docs.thebitcoincommons.org/consensus/formal-verification.html)
 - [blvm-bench](https://github.com/BTCDecoded/blvm-bench)
+
+## Suggest topics for the next meeting
+
+Use [Suggest topics](/contribute) — submit a primary-source link via the form.
