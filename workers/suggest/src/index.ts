@@ -206,17 +206,27 @@ async function sendWebhookNotify(webhook: string, record: SuggestionRecord): Pro
   const message = lines.join('\n').slice(0, 1900);
 
   if (isNtfyUrl(webhook)) {
-    const res = await fetch(webhook, {
+    const parsed = new URL(webhook);
+    const topic = parsed.pathname.replace(/^\/+|\/+$/g, '').split('/')[0];
+    if (!topic) {
+      console.error('ntfy notify skipped: no topic in NOTIFY_WEBHOOK');
+      return;
+    }
+    // JSON body — Workers can strip or reject Title/Priority request headers.
+    const res = await fetch(parsed.origin, {
       method: 'POST',
-      headers: {
-        Title: 'BitDevs DMV suggestion',
-        Tags: 'mailbox_with_mail,bitcoin',
-        Priority: 'default',
-      },
-      body: message,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        topic,
+        title: 'BitDevs DMV suggestion',
+        message,
+        tags: ['mailbox_with_mail', 'bitcoin'],
+      }),
     });
     if (!res.ok) {
       console.error('ntfy notify failed', res.status, (await res.text().catch(() => '')).slice(0, 300));
+    } else {
+      console.log('ntfy notify ok', topic);
     }
     return;
   }

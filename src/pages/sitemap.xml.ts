@@ -13,14 +13,12 @@ export const GET: APIRoute = async () => {
     { loc: siteUrl('/events'), changefreq: 'weekly', priority: '0.9', lastmod: today },
     { loc: siteUrl('/about'), changefreq: 'monthly', priority: '0.7', lastmod: today },
     { loc: siteUrl('/rules'), changefreq: 'monthly', priority: '0.7', lastmod: today },
-    { loc: siteUrl('/contribute'), changefreq: 'monthly', priority: '0.6', lastmod: today },
     { loc: siteUrl('/llms.txt'), changefreq: 'weekly', priority: '0.5', lastmod: today },
     { loc: siteUrl('/events.json'), changefreq: 'weekly', priority: '0.4', lastmod: today },
     { loc: siteUrl('/rss.xml'), changefreq: 'weekly', priority: '0.4', lastmod: today },
     { loc: siteUrl('/calendar.ics'), changefreq: 'weekly', priority: '0.5', lastmod: today },
     { loc: siteUrl('/about.md'), changefreq: 'monthly', priority: '0.3', lastmod: today },
     { loc: siteUrl('/rules.md'), changefreq: 'monthly', priority: '0.3', lastmod: today },
-    { loc: siteUrl('/contribute.md'), changefreq: 'monthly', priority: '0.3', lastmod: today },
     { loc: siteUrl('/events.md'), changefreq: 'weekly', priority: '0.4', lastmod: today },
   ];
 

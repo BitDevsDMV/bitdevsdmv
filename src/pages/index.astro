@@ -75,12 +75,7 @@ const featuredIsUpcoming = next ? isUpcomingOrToday(next.data.date) : false;
                         <i class="fa-solid fa-ticket" aria-hidden="true" />
                         RSVP
                       </a>
-                    ) : (
-                  <a class="btn btn-outline-light" href="/contribute">
-                        <i class="fa-solid fa-plus" aria-hidden="true" />
-                        Suggest a topic
-                      </a>
-                    )}
+                    ) : null}
                   </div>
                 </>
               ) : (
@@ -90,10 +85,10 @@ const featuredIsUpcoming = next ? isUpcomingOrToday(next.data.date) : false;
                     Calendar
                   </p>
                   <h2>Seminar schedule coming soon</h2>
-                  <p class="hero-meta mt-3 mb-4">Watch this space — or suggest a topic.</p>
-                  <a class="btn btn-primary" href="/contribute">
-                    <i class="fa-solid fa-plus" aria-hidden="true" />
-                    Suggest a topic
+                  <p class="hero-meta mt-3 mb-4">Watch this space.</p>
+                  <a class="btn btn-primary" href="/events">
+                    <i class="fa-solid fa-book-open" aria-hidden="true" />
+                    Event archive
                   </a>
                 </>
               )

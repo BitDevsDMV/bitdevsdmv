@@ -31,7 +31,6 @@ export async function buildLlmsTxt(): Promise<string> {
     `- [Home](${SITE}/): Next/latest seminar and recent archive`,
     `- [About](${SITE}/about.md): What BitDevs DMV is and is not`,
     `- [Ground rules](${SITE}/rules.md): Chatham House, no recordings, technical bar`,
-    `- [Suggest topics](${SITE}/contribute.md): How to propose primary sources (form posts to Cloudflare Worker API)`,
     `- [Events archive](${SITE}/events.md): Chronological list of Socratic Seminars`,
     `- [Events JSON](${SITE}/events.json): Structured event index for agents`,
     `- [Calendar ICS](${SITE}/calendar.ics): Subscribe to published seminars`,
@@ -87,7 +86,6 @@ export async function buildLlmsFullTxt(): Promise<string> {
     `- HTML home: ${SITE}/`,
     `- About (md): ${SITE}/about.md`,
     `- Rules (md): ${SITE}/rules.md`,
-    `- Suggest topics (md): ${SITE}/contribute.md`,
     `- Events (md): ${SITE}/events.md`,
     `- Events JSON: ${SITE}/events.json`,
     `- Calendar ICS: ${SITE}/calendar.ics`,
@@ -169,7 +167,6 @@ This is not an investor mixer, recruiting fair, or price-talk meetup. Pitch deck
 ## Related
 
 - [Ground rules](${SITE}/rules.md)
-- [Suggest topics](${SITE}/contribute.md)
 - [Events](${SITE}/events.md)
 - [BitDevs Map](https://www.bitdevsmap.org/)
 `;
@@ -202,26 +199,3 @@ The event page is a reading room. Skimming linked primary sources before you arr
 `;
 }
 
-export function contributeMarkdown(): string {
-  return `# Suggest topics — BitDevs DMV
-
-Submit primary sources for the next Socratic Seminar via the HTML form at ${SITE}/contribute.
-
-## What to send
-
-Link the source itself when you can:
-
-- Bitcoin Core / LDK / LND / CLN pull requests with substantial changes
-- Mailing list posts and Bitcoin Optech notes
-- Research papers, BIPs, BOLTs
-- Network data, vulnerability disclosures, release notes
-
-## API
-
-The form posts JSON to a Cloudflare Worker (\`POST /suggest\`). Configure the site with \`PUBLIC_SUGGEST_API_URL\`. Do not use GitHub issues for topic suggestions.
-
-## Sections used on event pages
-
-Announcements; Mailing Lists, Meetings and Bitcoin Optech; Network Data; Research; InfoSec; Pull Requests and repo updates; New Releases; Mining; Miscellaneous.
-`;
-}

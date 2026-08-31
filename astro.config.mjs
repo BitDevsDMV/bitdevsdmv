@@ -6,4 +6,8 @@ export default defineConfig({
   site: 'https://bitdevsdmv.com',
   output: 'static',
   trailingSlash: 'never',
+  redirects: {
+    '/contribute': '/',
+    '/contribute.md': '/',
+  },
 });

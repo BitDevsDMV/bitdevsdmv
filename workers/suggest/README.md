@@ -1,6 +1,8 @@
 # BitDevs DMV — topic suggestion Worker
 
-Cloudflare Worker backend for `/contribute` form submissions. Stores suggestions in KV and emails **josh@mybitcoinfuture.com** via [Resend](https://resend.com).
+Paused: the public form is off the site. This Worker is kept for a later notify setup.
+
+Cloudflare Worker backend for topic submissions. Stores suggestions in KV.
 
 ## Endpoints
 

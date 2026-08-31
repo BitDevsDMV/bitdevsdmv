@@ -22,7 +22,7 @@ draft: false
 
 These rules exist so that BitDevs participants can speak freely within the event. Questions are encouraged, including basic ones!
 
-Full chapter rules: [Ground rules](/rules). Suggest topics: [Suggest topics](/contribute).
+Full chapter rules: [Ground rules](/rules).
 
 ## Location
 
@@ -156,7 +156,3 @@ Full chapter rules: [Ground rules](/rules). Suggest topics: [Suggest topics](/co
 - [Wallet Migration Advisory](https://bitcoincore.org/en/2026/01/05/wallet-migration-bug/)
 - [BLVM Formal Verification](https://docs.thebitcoincommons.org/consensus/formal-verification.html)
 - [BLVM Specification Lock](https://github.com/BTCDecoded/blvm-spec-lock)
-
-## Suggest topics for the next meeting
-
-Use [Suggest topics](/contribute) — submit a primary-source link via the form.
