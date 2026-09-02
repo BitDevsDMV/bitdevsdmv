@@ -48,8 +48,6 @@ jobs:
           import json
           import os
           import sys
-          import urllib.error
-          import urllib.request
           from urllib.parse import urlparse
 
           raw = os.environ.get("NTFY_URL", "").strip().strip("\"'")
@@ -63,39 +61,46 @@ jobs:
           title = (os.environ.get("NTFY_TITLE") or "BitDevs DMV").strip() or "BitDevs DMV"
           tags = [t.strip() for t in (os.environ.get("NTFY_TAGS") or "").split(",") if t.strip()]
 
-          # Accept https://ntfy.sh/topic, ntfy.sh/topic, or a bare topic name.
           if "://" not in raw and "/" not in raw:
               raw = f"https://ntfy.sh/{raw}"
           elif "://" not in raw:
               raw = f"https://{raw}"
 
           parsed = urlparse(raw)
-          if parsed.scheme not in ("http", "https") or not parsed.netloc:
-              sys.exit("NTFY_URL is not a usable host (need topic name or https://ntfy.sh/<topic>)")
+          host = (parsed.hostname or "").lower()
           topic = parsed.path.strip("/").split("/")[0] if parsed.path else ""
           if not topic:
               sys.exit("NTFY_URL has no topic path")
 
-          body = json.dumps(
-              {
-                  "topic": topic,
-                  "title": title[:80],
-                  "message": message[:1900],
-                  "tags": tags or ["mailbox_with_mail", "bitcoin"],
-              }
-          ).encode()
-
-          req = urllib.request.Request(
-              f"{parsed.scheme}://{parsed.netloc}",
-              data=body,
-              method="POST",
-              headers={"Content-Type": "application/json"},
+          private = (
+              host.endswith(".ts.net")
+              or host.endswith(".local")
+              or host.endswith(".internal")
+              or host.startswith("100.")
+              or host.startswith("10.")
+              or host.startswith("192.168.")
+              or host in {"localhost", "zeus"}
           )
-          try:
-              with urllib.request.urlopen(req, timeout=20) as resp:
-                  if resp.status >= 400:
-                      sys.exit(f"ntfy HTTP {resp.status}")
-          except urllib.error.HTTPError as err:
-              sys.exit(f"ntfy HTTP {err.code}")
-          print("ntfy sent")
+          # GitHub-hosted runners cannot resolve Tailscale/LAN. Always use public ntfy.
+          server = "https://ntfy.sh" if (private or host in {"", "ntfy.sh"}) else f"{parsed.scheme}://{parsed.netloc}"
+
+          payload = {
+              "topic": topic,
+              "title": title[:80],
+              "message": message[:1900],
+              "tags": tags or ["mailbox_with_mail", "bitcoin"],
+          }
+          open("/tmp/ntfy-payload.json", "w", encoding="utf-8").write(json.dumps(payload))
+          open("/tmp/ntfy-server.txt", "w", encoding="utf-8").write(server)
+          print(f"publishing via {server}")
           PY
+          NTFY_SERVER="$(cat /tmp/ntfy-server.txt)"
+          echo "dns:"
+          getent ahosts ntfy.sh | head -5 || true
+          curl -fsS --retry 5 --retry-delay 2 --retry-all-errors --retry-connrefused \
+            --connect-timeout 10 --max-time 30 \
+            -H "Content-Type: application/json" \
+            --data-binary @/tmp/ntfy-payload.json \
+            "${NTFY_SERVER}"
+          echo
+          echo "ntfy sent"
