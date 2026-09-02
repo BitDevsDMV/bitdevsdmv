@@ -52,7 +52,7 @@ jobs:
           import urllib.request
           from urllib.parse import urlparse
 
-          raw = os.environ.get("NTFY_URL", "").strip()
+          raw = os.environ.get("NTFY_URL", "").strip().strip("\"'")
           if not raw:
               sys.exit("NTFY_URL secret is not set")
 
@@ -63,12 +63,18 @@ jobs:
           title = (os.environ.get("NTFY_TITLE") or "BitDevs DMV").strip() or "BitDevs DMV"
           tags = [t.strip() for t in (os.environ.get("NTFY_TAGS") or "").split(",") if t.strip()]
 
+          # Accept https://ntfy.sh/topic, ntfy.sh/topic, or a bare topic name.
+          if "://" not in raw and "/" not in raw:
+              raw = f"https://ntfy.sh/{raw}"
+          elif "://" not in raw:
+              raw = f"https://{raw}"
+
           parsed = urlparse(raw)
           if parsed.scheme not in ("http", "https") or not parsed.netloc:
-              sys.exit("NTFY_URL must be an http(s) URL with a topic path")
+              sys.exit("NTFY_URL is not a usable host (need topic name or https://ntfy.sh/<topic>)")
           topic = parsed.path.strip("/").split("/")[0] if parsed.path else ""
           if not topic:
-              sys.exit("NTFY_URL is missing the topic path")
+              sys.exit("NTFY_URL has no topic path")
 
           body = json.dumps(
               {
