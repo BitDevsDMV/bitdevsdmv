@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BitDevs DMV — Socratic Seminar 022</title>
+  <meta name="description" content="Reading-room slide deck for BitDevs DMV Socratic Seminar 022 at PubKey DC." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css" />
+  <link rel="stylesheet" href="../theme.css" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- 1 TITLE -->
+      <section class="slide-hero" data-background-color="#07111f">
+        <div class="slide-chrome">
+          <div class="mark">
+            <img src="/brand/bitdevs-dmv-logo.png" alt="" width="28" height="28" />
+            <div class="mark-name"><span>BitDevs</span> DMV</div>
+          </div>
+          <div class="deck-meta">Socratic Seminar 022</div>
+        </div>
+        <img class="hero-logo" src="/brand/bitdevs-dmv-logo.png" alt="BitDevs DMV" width="118" height="150" />
+        <h1><span class="signal">BitDevs</span> DMV</h1>
+        <p class="hero-sub">Socratic Seminar 022</p>
+        <p class="stars" aria-hidden="true">★★★</p>
+        <p class="hero-meta">
+          Wednesday, September 30, 2026<br />
+          PubKey DC · 410 7th St NW, Washington DC
+        </p>
+        <div class="hero-rules">
+          <span class="pill">Chatham House Rule</span>
+          <span class="pill">No recordings</span>
+        </div>
+        <p class="hero-site">bitdevsdmv.com</p>
+      </section>
+
+
+      <section data-background-color="#07111f">
+      <div class="slide-chrome">
+        <div class="mark">
+          <img src="/brand/bitdevs-dmv-logo.png" alt="" width="28" height="28" />
+          <div class="mark-name"><span>BitDevs</span> DMV</div>
+        </div>
+        <div class="deck-meta">Socratic Seminar 022</div>
+      </div>
+      <div class="slide-foot">
+        <span><span class="accent">bitdevsdmv.com</span> · reading room</span>
+        <span>Sep 30, 2026 · PubKey DC</span>
+      </div>
+        <p class="eyebrow">Technical · Protocol</p>
+        <h2>Bitcoin Core 31.1 + v32 Preview</h2>
+        <p class="section-line">v31.1 released July 8, 2026 — bug fixes, performance, translations</p>
+        <div class="link-row">
+          <a href="https://bitcoincore.org/en/2026/07/08/release-31.1/" target="_blank" rel="noopener">Announcement</a>
+          <a href="https://bitcoincore.org/en/releases/31.1/" target="_blank" rel="noopener">Release notes</a>
+          <a href="https://bitcoincore.org/bin/bitcoin-core-31.1/" target="_blank" rel="noopener">Binaries</a>
+          <a href="https://delvingbitcoin.org/t/bitcoin-core-v31-1-released/2696" target="_blank" rel="noopener">Delving thread</a>
+        </div>
+        <div class="notes-preview">
+          <div class="notes-preview-grid">
+            <p><strong>Chainstate</strong> — 31.1 fixed the DB repeatedly rewriting itself (excessive disk I/O).</p>
+            <p><strong>PrivateBroadcast</strong> — 31.1 fixed an IP leak: some <code>-privatebroadcast</code> connections went over clearnet.</p>
+          </div>
+        </div>
+        <div class="grid-3">
+          <div class="col">
+            <h3><a href="https://github.com/bitcoin/bitcoin/pull/35295" target="_blank" rel="noopener">PR #35295</a></h3>
+            <p class="who">v32 headline · ConnectBlock</p>
+            <p>Parallel prevout fetcher — worker pool pre-fetches all block inputs so serial disk-read latency no longer dominates.</p>
+            <ul>
+              <li>No consensus change — <code>-prevoutfetchthreads</code> (default 8, cap 16; 0 = old serial path)</li>
+              <li>Predecessor: <a href="https://github.com/bitcoin/bitcoin/pull/31132" target="_blank" rel="noopener">PR #31132</a></li>
+              <li><a href="https://github.com/bitcoin/bitcoin/pull/35295/files" target="_blank" rel="noopener">Diff / files</a></li>
+            </ul>
+          </div>
+          <div class="col">
+            <h3><a href="https://github.com/bitcoin/bitcoin/pull/36000" target="_blank" rel="noopener">PR #36000</a></h3>
+            <p class="who">Follow-up · read-ahead</p>
+            <p>Prefetch later blocks from disk while connecting the current one.</p>
+            <ul>
+              <li>Chainstate-owned block fetcher; read-ahead while ConnectBlock runs</li>
+              <li>Also prefetches sibling during reorg disconnect</li>
+            </ul>
+          </div>
+          <div class="col">
+            <h3>IBD + schedule</h3>
+            <p class="who">Tracking, not a single patch</p>
+            <ul>
+              <li><a href="https://github.com/bitcoin/bitcoin/pull/32043" target="_blank" rel="noopener">PR #32043</a> — IBD tracking PR</li>
+              <li><a href="https://github.com/bitcoin/bitcoin/issues/35122" target="_blank" rel="noopener">Issue #35122</a> — v32.0 release schedule</li>
+            </ul>
+          </div>
+        </div>
+        <div class="discuss discuss-compact">
+          <div class="label">Discussion</div>
+          <ol>
+            <li>Does parallel prevout fetching change the node operator cost calculus?</li>
+            <li>What's a realistic IBD time improvement — and does it matter for decentralization?</li>
+          </ol>
+        </div>
+      </section>
+
+
+
+      <section data-background-color="#07111f">
+      <div class="slide-chrome">
+        <div class="mark">
+          <img src="/brand/bitdevs-dmv-logo.png" alt="" width="28" height="28" />
+          <div class="mark-name"><span>BitDevs</span> DMV</div>
+        </div>
+        <div class="deck-meta">Socratic Seminar 022</div>
+      </div>
+      <div class="slide-foot">
+        <span><span class="accent">bitdevsdmv.com</span> · reading room</span>
+        <span>Sep 30, 2026 · PubKey DC</span>
+      </div>
+        <p class="eyebrow">Security · Tooling · Postmortem</p>
+        <h2>Coldcard RNG Defect + HWI → Maintenance Mode</h2>
+        <div class="slide-split">
+          <div class="main">
+            <ul>
+              <li>Coldcard branded "Don't Trust. Verify." — never audited the seed-generation path</li>
+              <li>Since Mar 2021: hardware TRNG silently disabled (<code>MICROPY_HW_ENABLE_RNG=0</code>); Yasmarang software PRNG ran instead</li>
+              <li>Seed looked valid; entropy was not — on-chain losses in the ~$100M+ range</li>
+              <li><strong>Error 1:</strong> Source-available ≠ audited (restrictive license ≠ open-source scrutiny)</li>
+              <li><strong>Error 2:</strong> Workflow security ≠ seed security — SE/PSBT reviewed; entropy path was not</li>
+              <li><strong>Error 3:</strong> Social capital ≠ verification — HWI/Core tooling + endorsements made Coldcard the default</li>
+              <li>HWI → maintenance mode (Optech #418): ecosystem consequence of credentialed trust without seed-path audit</li>
+            </ul>
+            <p class="sources">secsov.com/articles/dont-trust-verify · Optech #416 · Optech #418</p>
+          </div>
+          <aside class="resource-qr">
+            <p class="qr-label">Read</p>
+            <a href="https://secsov.com/articles/dont-trust-verify">
+              <div class="qr-mini" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 41 41" shape-rendering="crispEdges"><path fill="#ffffff" d="M0 0h41v41H0z"/><path stroke="#000000" d="M4 4.5h7m1 0h2m2 0h5m4 0h3m2 0h7M4 5.5h1m5 0h1m3 0h1m2 0h2m3 0h3m5 0h1m5 0h1M4 6.5h1m1 0h3m1 0h1m4 0h2m1 0h2m1 0h3m1 0h1m2 0h1m1 0h1m1 0h3m1 0h1M4 7.5h1m1 0h3m1 0h1m1 0h5m2 0h3m3 0h2m1 0h1m1 0h1m1 0h3m1 0h1M4 8.5h1m1 0h3m1 0h1m1 0h1m2 0h2m3 0h1m2 0h1m3 0h1m2 0h1m1 0h3m1 0h1M4 9.5h1m5 0h1m1 0h1m1 0h3m2 0h1m4 0h3m1 0h1m1 0h1m5 0h1M4 10.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M12 11.5h1m2 0h1m2 0h1m2 0h1m1 0h4m1 0h1M4 12.5h1m3 0h1m1 0h3m1 0h3m2 0h1m1 0h1m3 0h1m2 0h6m2 0h1M4 13.5h6m1 0h1m1 0h1m2 0h1m1 0h5m2 0h1m1 0h1m1 0h1m3 0h2M6 14.5h2m1 0h2m1 0h1m1 0h1m2 0h3m2 0h1m1 0h1m2 0h4m2 0h1m1 0h1M4 15.5h1m1 0h3m3 0h1m1 0h2m1 0h1m8 0h1m2 0h1m5 0h1M4 16.5h2m1 0h2m1 0h1m3 0h1m2 0h1m1 0h2m2 0h1m2 0h1m1 0h1m1 0h1m1 0h2M4 17.5h4m1 0h1m2 0h1m2 0h4m2 0h5m1 0h1m5 0h2M5 18.5h3m1 0h4m4 0h1m1 0h1m1 0h1m2 0h1m2 0h7m1 0h1M7 19.5h1m6 0h1m2 0h1m1 0h4m2 0h3m1 0h2m1 0h1M4 20.5h8m1 0h1m1 0h3m3 0h1m1 0h5m2 0h1m1 0h2m1 0h1M6 21.5h1m2 0h1m1 0h1m1 0h1m1 0h1m2 0h2m2 0h1m4 0h1m5 0h3M4 22.5h1m2 0h2m1 0h3m1 0h1m1 0h2m1 0h1m1 0h1m2 0h6m1 0h1m1 0h1M4 23.5h4m3 0h2m1 0h2m4 0h6m4 0h2M7 24.5h1m2 0h2m6 0h1m3 0h1m1 0h1m3 0h1m1 0h4m2 0h1M4 25.5h2m1 0h3m4 0h1m1 0h1m3 0h1m2 0h1m2 0h2m1 0h1m1 0h1m2 0h2M6 26.5h1m2 0h2m2 0h1m1 0h1m4 0h1m2 0h1m2 0h2m5 0h3M7 27.5h1m1 0h1m1 0h3m2 0h1m4 0h5m3 0h4m2 0h1M4 28.5h2m2 0h1m1 0h1m1 0h1m1 0h1m1 0h2m1 0h3m2 0h3m1 0h6M12 29.5h5m1 0h5m1 0h2m2 0h1m3 0h1m1 0h1M4 30.5h7m1 0h3m1 0h2m1 0h1m2 0h1m1 0h1m3 0h1m1 0h1m1 0h2m1 0h1M4 31.5h1m5 0h1m2 0h2m1 0h2m1 0h1m4 0h1m1 0h1m1 0h1m3 0h1m3 0h1M4 32.5h1m1 0h3m1 0h1m1 0h1m1 0h1m2 0h2m1 0h1m5 0h1m1 0h6M4 33.5h1m1 0h3m1 0h1m3 0h1m3 0h1m2 0h5m1 0h2m1 0h6M4 34.5h1m1 0h3m1 0h1m5 0h2m1 0h1m1 0h2m1 0h1m5 0h3M4 35.5h1m5 0h1m2 0h1m1 0h2m1 0h4m3 0h1m2 0h2M4 36.5h7m1 0h2m3 0h2m2 0h1m1 0h6m1 0h1m2 0h1m2 0h1"/></svg>
+</div>
+              <p class="qr-title">Don't Trust, Verify</p>
+              <p class="qr-url">secsov.com/articles/dont-trust-verify</p>
+            </a>
+          </aside>
+        </div>
+        <div class="discuss">
+          <div class="label">Discussion</div>
+          <ol>
+            <li>What does "don't trust, verify" require when the marketed verification path never covered seed entropy?</li>
+            <li>Who failed — vendor, credentialed endorsers, tooling defaults, or the culture that treats reputation as audit?</li>
+          </ol>
+        </div>
+      </section>
+
+
+
+      <section data-background-color="#07111f">
+      <div class="slide-chrome">
+        <div class="mark">
+          <img src="/brand/bitdevs-dmv-logo.png" alt="" width="28" height="28" />
+          <div class="mark-name"><span>BitDevs</span> DMV</div>
+        </div>
+        <div class="deck-meta">Socratic Seminar 022</div>
+      </div>
+      <div class="slide-foot">
+        <span><span class="accent">bitdevsdmv.com</span> · reading room</span>
+        <span>Sep 30, 2026 · PubKey DC</span>
+      </div>
+        <p class="eyebrow">Research · Spec</p>
+        <h2>Formal Verification of Bitcoin Consensus</h2>
+        <p class="sources" style="margin-bottom:0.55rem">Independent efforts, same thesis: Bitcoin needs a machine-checkable spec. Core does not ship one.</p>
+        <div class="grid-3">
+          <div class="col">
+            <h3>btc-verified</h3>
+            <p class="who">ProofOfKeags · Optech #414</p>
+            <div class="card-qr" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 41 41" shape-rendering="crispEdges"><path fill="#ffffff" d="M0 0h41v41H0z"/><path stroke="#000000" d="M4 4.5h7m6 0h1m2 0h5m2 0h1m2 0h7M4 5.5h1m5 0h1m3 0h1m2 0h5m4 0h1m3 0h1m5 0h1M4 6.5h1m1 0h3m1 0h1m1 0h1m2 0h3m1 0h1m1 0h3m6 0h1m1 0h3m1 0h1M4 7.5h1m1 0h3m1 0h1m1 0h2m2 0h1m1 0h3m3 0h3m1 0h1m1 0h1m1 0h3m1 0h1M4 8.5h1m1 0h3m1 0h1m1 0h4m3 0h1m1 0h2m2 0h1m2 0h1m1 0h1m1 0h3m1 0h1M4 9.5h1m5 0h1m1 0h1m2 0h7m2 0h1m3 0h1m1 0h1m5 0h1M4 10.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M12 11.5h1m5 0h2m5 0h1M4 12.5h1m1 0h5m3 0h2m1 0h3m1 0h1m2 0h1m5 0h5M5 13.5h3m1 0h1m1 0h1m1 0h3m2 0h1m1 0h1m1 0h4m1 0h1m2 0h2m1 0h4M4 14.5h4m1 0h3m1 0h2m1 0h1m2 0h2m1 0h1m2 0h1m2 0h1m3 0h1m1 0h2M4 15.5h4m5 0h3m2 0h3m4 0h2m1 0h1m1 0h1m1 0h3m1 0h1M4 16.5h3m1 0h1m1 0h1m8 0h1m2 0h1m2 0h1m1 0h3m2 0h2M7 17.5h2m2 0h3m1 0h1m1 0h5m2 0h1m1 0h2m2 0h1m2 0h4M4 18.5h1m1 0h1m3 0h1m1 0h1m4 0h2m2 0h1m1 0h1m2 0h1m2 0h2m3 0h2M6 19.5h1m1 0h1m5 0h2m1 0h2m1 0h1m2 0h3m3 0h2m2 0h2M7 20.5h4m1 0h1m1 0h1m1 0h2m3 0h1m1 0h2m1 0h1m1 0h2m1 0h2m3 0h1M6 21.5h1m1 0h2m1 0h5m2 0h1m1 0h3m1 0h1m2 0h1m2 0h2m1 0h2m1 0h1M4 22.5h1m1 0h1m2 0h2m1 0h2m2 0h6m2 0h1m1 0h1m1 0h1m1 0h3m1 0h2M4 23.5h6m3 0h2m1 0h3m2 0h4m4 0h1m1 0h6M4 24.5h3m1 0h1m1 0h1m1 0h1m4 0h2m1 0h1m2 0h4m1 0h2m1 0h3m1 0h2M4 25.5h1m3 0h2m1 0h1m1 0h2m1 0h2m1 0h1m2 0h1m2 0h1m1 0h1m2 0h1m3 0h1m1 0h1M4 26.5h1m5 0h1m2 0h1m5 0h3m2 0h1m4 0h1m1 0h3m1 0h1M4 27.5h1m2 0h2m2 0h2m2 0h1m1 0h1m1 0h1m2 0h1m2 0h2m1 0h3m3 0h1M4 28.5h1m1 0h1m2 0h2m6 0h3m6 0h7m2 0h2M12 29.5h1m3 0h5m1 0h2m1 0h1m1 0h2m3 0h1m1 0h1m1 0h1M4 30.5h7m2 0h4m1 0h2m2 0h1m1 0h2m1 0h2m1 0h1m1 0h1m1 0h1M4 31.5h1m5 0h1m1 0h1m1 0h2m4 0h1m3 0h5m3 0h5M4 32.5h1m1 0h3m1 0h1m1 0h2m2 0h1m1 0h2m2 0h2m1 0h1m2 0h6M4 33.5h1m1 0h3m1 0h1m1 0h1m3 0h2m1 0h3m2 0h1m1 0h4m2 0h2m2 0h1M4 34.5h1m1 0h3m1 0h1m1 0h1m1 0h2m1 0h1m3 0h1m1 0h1m2 0h1m3 0h2m1 0h2M4 35.5h1m5 0h1m2 0h2m1 0h1m1 0h1m1 0h1m2 0h4m2 0h1m2 0h3M4 36.5h7m1 0h1m1 0h2m1 0h2m2 0h1m1 0h1m2 0h3m1 0h2m1 0h1m1 0h1"/></svg></div>
+            <a class="card-link" href="https://github.com/ProofOfKeags/btc-verified" target="_blank" rel="noopener">github.com/ProofOfKeags/btc-verified</a>
+            <p>Formal Lean/Coq proofs of Bitcoin consensus rules — prove properties of the protocol, not just test an implementation.</p>
+          </div>
+          <div class="col">
+            <h3>Hornet Node</h3>
+            <p class="who">Toby Sharp</p>
+            <div class="card-qr" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 33 33" shape-rendering="crispEdges"><path fill="#ffffff" d="M0 0h33v33H0z"/><path stroke="#000000" d="M4 4.5h7m5 0h1m3 0h1m1 0h7M4 5.5h1m5 0h1m2 0h1m2 0h1m1 0h2m2 0h1m5 0h1M4 6.5h1m1 0h3m1 0h1m1 0h1m2 0h2m1 0h3m1 0h1m1 0h3m1 0h1M4 7.5h1m1 0h3m1 0h1m1 0h3m1 0h2m1 0h1m2 0h1m1 0h3m1 0h1M4 8.5h1m1 0h3m1 0h1m1 0h3m1 0h2m2 0h1m1 0h1m1 0h3m1 0h1M4 9.5h1m5 0h1m1 0h2m2 0h5m1 0h1m5 0h1M4 10.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M12 11.5h2m1 0h2m3 0h1M4 12.5h1m1 0h5m4 0h1m1 0h2m3 0h5M7 13.5h3m1 0h3m2 0h2m2 0h1m2 0h1m3 0h1M5 14.5h6m1 0h4m1 0h3m1 0h1m3 0h1m1 0h2M4 15.5h1m1 0h1m11 0h1m1 0h2m2 0h1m3 0h1M6 16.5h1m3 0h2m2 0h2m1 0h2m2 0h2m1 0h1m1 0h3M4 17.5h2m1 0h3m1 0h1m4 0h1m1 0h1m1 0h2m1 0h1m1 0h1m1 0h1M4 18.5h1m1 0h5m1 0h1m4 0h1m1 0h1m2 0h4m1 0h2M4 19.5h1m1 0h1m2 0h1m1 0h1m1 0h1m2 0h1m2 0h2m2 0h2m3 0h1M4 20.5h1m2 0h5m2 0h1m1 0h9m1 0h1M12 21.5h1m1 0h1m5 0h1m3 0h2M4 22.5h7m2 0h1m1 0h4m1 0h1m1 0h1m1 0h1m1 0h3M4 23.5h1m5 0h1m1 0h4m2 0h1m1 0h1m3 0h2M4 24.5h1m1 0h3m1 0h1m1 0h4m3 0h6m1 0h3M4 25.5h1m1 0h3m1 0h1m1 0h2m2 0h2m3 0h2m1 0h5M4 26.5h1m1 0h3m1 0h1m1 0h1m4 0h2m6 0h2m1 0h1M4 27.5h1m5 0h1m5 0h2m1 0h3m1 0h3m2 0h1M4 28.5h7m1 0h1m3 0h1m1 0h1m4 0h6"/></svg></div>
+            <a class="card-link" href="https://hornetnode.org" target="_blank" rel="noopener">hornetnode.org</a>
+            <p>34 declarative semantic invariants in C++ — one per rule, composable algebra — consensus as explicit, inspectable logic.</p>
+          </div>
+          <div class="col">
+            <h3>Orange Paper / BLVM</h3>
+            <p class="who">Bitcoin Commons · Z3 spec-lock</p>
+            <div class="card-qr" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 45 45" shape-rendering="crispEdges"><path fill="#ffffff" d="M0 0h45v45H0z"/><path stroke="#000000" d="M4 4.5h7m2 0h2m1 0h1m2 0h2m1 0h1m1 0h1m2 0h1m4 0h1m1 0h7M4 5.5h1m5 0h1m2 0h1m1 0h1m5 0h1m1 0h1m2 0h1m1 0h1m1 0h3m1 0h1m5 0h1M4 6.5h1m1 0h3m1 0h1m1 0h4m2 0h3m2 0h4m3 0h2m2 0h1m1 0h3m1 0h1M4 7.5h1m1 0h3m1 0h1m1 0h2m1 0h1m1 0h1m1 0h1m1 0h3m2 0h1m1 0h3m3 0h1m1 0h3m1 0h1M4 8.5h1m1 0h3m1 0h1m1 0h2m4 0h1m3 0h3m2 0h1m4 0h1m1 0h1m1 0h3m1 0h1M4 9.5h1m5 0h1m1 0h2m2 0h1m2 0h2m1 0h1m2 0h2m2 0h1m1 0h1m2 0h1m5 0h1M4 10.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M12 11.5h1m2 0h2m1 0h3m2 0h1m1 0h4m1 0h2M4 12.5h1m1 0h5m2 0h4m1 0h2m2 0h1m1 0h1m1 0h1m2 0h2m3 0h5M6 13.5h3m4 0h3m1 0h5m5 0h1m4 0h1m5 0h2M4 14.5h1m1 0h2m1 0h2m1 0h4m2 0h1m2 0h1m2 0h3m1 0h2m1 0h1m1 0h2m3 0h3M4 15.5h1m1 0h2m4 0h2m1 0h3m2 0h1m4 0h2m1 0h1m3 0h1m1 0h3m3 0h1M4 16.5h2m1 0h2m1 0h1m1 0h1m1 0h1m2 0h2m1 0h2m2 0h1m1 0h6m1 0h2m1 0h5M5 17.5h3m1 0h1m3 0h4m1 0h1m1 0h5m2 0h1m4 0h1m2 0h1M5 18.5h1m2 0h1m1 0h2m2 0h2m3 0h1m1 0h1m2 0h3m1 0h1m2 0h1m1 0h1m1 0h3m2 0h1M4 19.5h3m2 0h1m3 0h1m3 0h1m2 0h6m1 0h1m2 0h7m2 0h1M5 20.5h6m3 0h1m1 0h1m3 0h1m2 0h1m1 0h1m1 0h5m1 0h2m1 0h1m1 0h1m1 0h1M7 21.5h3m1 0h5m3 0h1m2 0h1m1 0h1m2 0h1m1 0h2m1 0h2m1 0h1m3 0h1M5 22.5h4m1 0h1m2 0h1m1 0h1m1 0h1m1 0h5m1 0h2m1 0h1m2 0h3m1 0h1m1 0h4M4 23.5h2m1 0h1m5 0h2m1 0h2m1 0h1m3 0h5m2 0h2m1 0h1m6 0h1M4 24.5h1m5 0h2m1 0h1m5 0h1m1 0h1m1 0h1m2 0h5m1 0h3m1 0h3M4 25.5h1m1 0h2m3 0h1m6 0h1m1 0h1m1 0h3m2 0h1m2 0h1m1 0h1m4 0h1m1 0h1M6 26.5h3m1 0h1m1 0h2m3 0h4m1 0h1m3 0h1m3 0h2m1 0h5m1 0h2M4 27.5h2m1 0h3m1 0h1m1 0h2m2 0h4m2 0h2m3 0h1m3 0h1m2 0h2m2 0h2M5 28.5h1m1 0h2m1 0h1m1 0h3m2 0h1m1 0h1m2 0h9m2 0h2m1 0h1m1 0h3M4 29.5h1m1 0h2m1 0h1m1 0h2m1 0h1m1 0h2m1 0h3m5 0h2m3 0h1m2 0h1m2 0h1M4 30.5h1m1 0h2m1 0h3m4 0h1m4 0h1m2 0h1m1 0h1m1 0h1m1 0h2m2 0h2m2 0h3M4 31.5h1m1 0h4m1 0h3m1 0h2m3 0h1m4 0h3m5 0h1m1 0h2m2 0h2M4 32.5h1m3 0h7m1 0h2m3 0h1m4 0h11m1 0h3M12 33.5h5m1 0h1m1 0h4m1 0h1m1 0h1m1 0h1m1 0h2m3 0h2m1 0h1M4 34.5h7m4 0h2m1 0h4m2 0h2m6 0h1m1 0h1m1 0h1m1 0h3M4 35.5h1m5 0h1m1 0h1m2 0h1m1 0h1m3 0h3m1 0h3m2 0h3m3 0h2m1 0h1M4 36.5h1m1 0h3m1 0h1m1 0h2m2 0h2m1 0h2m4 0h1m1 0h10m1 0h1m1 0h1M4 37.5h1m1 0h3m1 0h1m1 0h1m3 0h1m1 0h2m1 0h2m1 0h1m1 0h2m4 0h3m1 0h2m2 0h1M4 38.5h1m1 0h3m1 0h1m1 0h3m1 0h2m1 0h3m1 0h1m2 0h1m2 0h1m1 0h1m1 0h1m3 0h4M4 39.5h1m5 0h1m2 0h2m2 0h1m1 0h1m2 0h4m1 0h1m2 0h1m1 0h3m1 0h1m3 0h1M4 40.5h7m1 0h1m2 0h1m1 0h1m1 0h3m1 0h2m1 0h5m2 0h2m1 0h5"/></svg></div>
+            <a class="card-link" href="https://docs.thebitcoincommons.org/consensus/formal-verification.html" target="_blank" rel="noopener">docs.thebitcoincommons.org</a>
+            <p>159 numbered consensus rules; Z3 locking ~251 production functions — a written spec that can reject drift in code.</p>
+          </div>
+        </div>
+        <div class="discuss discuss-compact">
+          <div class="label">Discussion</div>
+          <ol>
+            <li>What would it take for formal verification to matter in practice — who runs the verifier?</li>
+            <li>Who decides what the canonical spec says if implementations disagree?</li>
+          </ol>
+        </div>
+      </section>
+
+
+
+      <section data-background-color="#07111f">
+      <div class="slide-chrome">
+        <div class="mark">
+          <img src="/brand/bitdevs-dmv-logo.png" alt="" width="28" height="28" />
+          <div class="mark-name"><span>BitDevs</span> DMV</div>
+        </div>
+        <div class="deck-meta">Socratic Seminar 022</div>
+      </div>
+      <div class="slide-foot">
+        <span><span class="accent">bitdevsdmv.com</span> · reading room</span>
+        <span>Sep 30, 2026 · PubKey DC</span>
+      </div>
+        <p class="eyebrow">Soft forks · Script</p>
+        <h2>Covenants — CTV, OP_CAT, BIP 448</h2>
+        <ul>
+          <li><a href="https://bips.dev/119/" target="_blank" rel="noopener">BIP 119 (CTV)</a>: most-reviewed covenant primitive; no activation path after 2022 attempt</li>
+          <li><a href="https://bips.dev/347/" target="_blank" rel="noopener">BIP 347 (OP_CAT)</a>: re-enabled concatenation; broader expressiveness, more debate</li>
+          <li><a href="https://bips.dev/448/" target="_blank" rel="noopener">BIP 448</a> (Sanders/Poinsot/Roose, March 2026): "Taproot-native Rebindable Transactions"
+            <ul>
+              <li>Bundles <a href="https://bips.dev/446/" target="_blank" rel="noopener">OP_TEMPLATEHASH (446)</a> + <a href="https://bips.dev/348/" target="_blank" rel="noopener">OP_CHECKSIGFROMSTACK (348)</a> + <a href="https://bips.dev/349/" target="_blank" rel="noopener">OP_INTERNALKEY (349)</a></li>
+              <li>Targets Lightning improvements, eltoo-style channels, PTLCs · Activation timing: TBD</li>
+              <li>Draft PR: <a href="https://github.com/bitcoin/bips/pull/1802" target="_blank" rel="noopener">bitcoin/bips#1802</a></li>
+            </ul>
+          </li>
+          <li><a href="https://www.tftc.io/saylor-bitcoin-constitution-covenants-bip-110-governance" target="_blank" rel="noopener">Saylor "constitutional framing"</a> (July 28 X thread): treats consensus rules as a <em>constitution</em>; any rewrite without near-unanimous buy-in is "economic theft"
+            <ul>
+              <li>Lumps BIP-110, covenants (CTV / LNHANCE / etc.), and bigger-block proposals as the same "constitutional offense"</li>
+              <li>Political constraint from the largest corporate holder: soft forks now face an informal near-unanimity bar, not just developer consensus</li>
+            </ul>
+          </li>
+        </ul>
+        <p class="sources">
+          <a href="https://bips.dev/119/" target="_blank" rel="noopener">bips.dev/119</a> ·
+          <a href="https://bips.dev/347/" target="_blank" rel="noopener">bips.dev/347</a> ·
+          <a href="https://bips.dev/448/" target="_blank" rel="noopener">bips.dev/448</a> ·
+          <a href="https://bips.dev/446/" target="_blank" rel="noopener">446</a> /
+          <a href="https://bips.dev/348/" target="_blank" rel="noopener">348</a> /
+          <a href="https://bips.dev/349/" target="_blank" rel="noopener">349</a>
+        </p>
+        <div class="discuss">
+          <div class="label">Discussion</div>
+          <ol>
+            <li>Is BIP 448 a meaningful step toward activation or another stall in different packaging?</li>
+            <li>Does the Saylor constitutional framing help or hurt the technical conversation?</li>
+          </ol>
+        </div>
+      </section>
+
+
+
+      <section data-background-color="#07111f">
+      <div class="slide-chrome">
+        <div class="mark">
+          <img src="/brand/bitdevs-dmv-logo.png" alt="" width="28" height="28" />
+          <div class="mark-name"><span>BitDevs</span> DMV</div>
+        </div>
+        <div class="deck-meta">Socratic Seminar 022</div>
+      </div>
+      <div class="slide-foot">
+        <span><span class="accent">bitdevsdmv.com</span> · reading room</span>
+        <span>Sep 30, 2026 · PubKey DC</span>
+      </div>
+        <p class="eyebrow">Governance · Soft fork</p>
+        <h2>BIP-110 Failure, Ocean Split, Luke Dashjr Removed</h2>
+        <ul>
+          <li>BIP-110 (Reduced Data Temporary Softfork): marked Complete June 25, 2026</li>
+          <li>Mined 2 blocks on August 9, then stalled — marked Closed same day</li>
+          <li>55% threshold via modified BIP9; one-year active duration; UTXO grandfathering</li>
+          <li>One miner rejected BIP-110 while simultaneously mining through Ocean (DATUM)</li>
+          <li>Fork fell 300 blocks behind; mathematically ~6 years from self-correction</li>
+          <li>Knots added undocumented 8th consensus rule (P2A non-empty witness invalid) not in the BIP</li>
+          <li>Luke Dashjr removed as BIP editor August 11</li>
+        </ul>
+        <p class="sources">coindesk.com/tech/2026/08/09/… · decrypt.co/375310/…</p>
+        <div class="discuss">
+          <div class="label">Discussion</div>
+          <ol>
+            <li>What does BIP-110's failure reveal about Bitcoin's governance model?</li>
+            <li>Is an undocumented rule in the reference implementation a bug or an inherent feature of implementation-as-spec?</li>
+          </ol>
+        </div>
+      </section>
+
+
+
+      <section data-background-color="#07111f">
+      <div class="slide-chrome">
+        <div class="mark">
+          <img src="/brand/bitdevs-dmv-logo.png" alt="" width="28" height="28" />
+          <div class="mark-name"><span>BitDevs</span> DMV</div>
+        </div>
+        <div class="deck-meta">Socratic Seminar 022</div>
+      </div>
+      <div class="slide-foot">
+        <span><span class="accent">bitdevsdmv.com</span> · reading room</span>
+        <span>Sep 30, 2026 · PubKey DC</span>
+      </div>
+        <p class="eyebrow">Mining · Infrastructure</p>
+        <h2>Mining — Stratum V2, Poolin Bankruptcy</h2>
+        <ul>
+          <li>Stratum V2: pools representing 75% of hashrate committed to open block construction standard</li>
+          <li>DATUM (Ocean) is a competing implementation of the same block template concept</li>
+          <li>Commitment ≠ deployment — Job Declaration (miner-side template construction) is the real metric</li>
+          <li>Poolin: Chapter 11 bankruptcy, heading toward $52M asset sale</li>
+          <li>Poolin was once one of Bitcoin's three largest pools</li>
+        </ul>
+        <p class="sources">coindesk.com/markets/2026/05/11/… · stratumprotocol.org</p>
+        <div class="discuss">
+          <div class="label">Discussion</div>
+          <ol>
+            <li>Does 75% SV2 commitment translate to meaningful decentralization of block construction?</li>
+            <li>What does continued pool consolidation — and pools going out of business — mean for hashrate decentralization?</li>
+          </ol>
+        </div>
+      </section>
+
+
+
+      <section data-background-color="#07111f">
+      <div class="slide-chrome">
+        <div class="mark">
+          <img src="/brand/bitdevs-dmv-logo.png" alt="" width="28" height="28" />
+          <div class="mark-name"><span>BitDevs</span> DMV</div>
+        </div>
+        <div class="deck-meta">Socratic Seminar 022</div>
+      </div>
+      <div class="slide-foot">
+        <span><span class="accent">bitdevsdmv.com</span> · reading room</span>
+        <span>Sep 30, 2026 · PubKey DC</span>
+      </div>
+        <p class="eyebrow">Mining · Software</p>
+        <h2>Speaking of pools that go away — GridPool vs Commons</h2>
+        <p class="section-line">P2Pool died (share-chain, coinbase dust). Ocean DATUM+TIDES still has an operator. Two attempts to drop the operator without a second chain:</p>
+        <div class="grid-2">
+          <div class="col">
+            <h3>GridPool</h3>
+            <p class="who">gridpool.net · public beta / mainnet soft launch</p>
+            <p>Not a custodial wallet, not a share-chain, not a Stratum V1 pool. High-diff proofs go into a bounded Work Set; ordinary Bitcoin blocks snapshot the payout list; you get paid only when a GridPool miner finds a real block.</p>
+            <ul>
+              <li>Slot-0 = finder; rest of coinbase = snapshot. Ranked by verified PoW, not identity</li>
+              <li>Preferred path is DATUM → your GridPool node (Ocean-style templates, no Ocean operator)</li>
+              <li>Tradeoff: higher variance than FPPS/PPLNS; 300-slot coinbases break some stock firmware</li>
+            </ul>
+          </div>
+          <div class="col">
+            <h3>Commons Pool</h3>
+            <p class="who">commonspool.org · BTCDecoded · signet, not mainnet</p>
+            <p>Same P2Pool goal — no custodian, no coordinator — without a parallel chain. Peers finalize a work snapshot at checkpoints; between checkpoints every coinbase is built from the last finalized set.</p>
+            <ul>
+              <li>Miners keep template selection; coinbase pays addresses directly (claimed PPLNS)</li>
+              <li>Runs on Bitcoin Commons / Orange Paper, not Bitcoin Core</li>
+              <li>1% fee · KYC-free · <strong>not live on mainnet</strong></li>
+            </ul>
+          </div>
+        </div>
+        <p class="sources">
+          <a href="https://gridpool.net/" target="_blank" rel="noopener">gridpool.net</a> ·
+          <a href="https://commonspool.org/" target="_blank" rel="noopener">commonspool.org</a> ·
+          contrast:
+          <a href="https://p2pool.org/" target="_blank" rel="noopener">P2Pool</a> ·
+          <a href="https://ocean.xyz/docs/datum" target="_blank" rel="noopener">DATUM</a> ·
+          <a href="https://ocean.xyz/docs/tides" target="_blank" rel="noopener">TIDES</a>
+        </p>
+        <div class="discuss discuss-compact">
+          <div class="label">Discussion</div>
+          <ol>
+            <li>If GridPool still needs public seed nodes and DATUM firmware that can hash a 300-output coinbase — is the operator gone, or relocated?</li>
+            <li>Commons is signet-only on a non-Core stack. Is that the honest next P2Pool, or a research demo?</li>
+          </ol>
+        </div>
+      </section>
+
+
+
+      <section data-background-color="#07111f">
+      <div class="slide-chrome">
+        <div class="mark">
+          <img src="/brand/bitdevs-dmv-logo.png" alt="" width="28" height="28" />
+          <div class="mark-name"><span>BitDevs</span> DMV</div>
+        </div>
+        <div class="deck-meta">Socratic Seminar 022</div>
+      </div>
+      <div class="slide-foot">
+        <span><span class="accent">bitdevsdmv.com</span> · reading room</span>
+        <span>Sep 30, 2026 · PubKey DC</span>
+      </div>
+        <p class="eyebrow">Lightning · Security disclosure</p>
+        <h2>Lightning — CLN Embargo Binary + LND / Taproot Assets</h2>
+        <ul>
+          <li><a href="https://blog.blockstream.com/core-lightning-26-06-7/" target="_blank" rel="noopener">CLN 26.06.7</a> (Aug 28): security fixes shipped as <strong>signed binaries only</strong> — source withheld 14 days so attackers couldn't diff the patch</li>
+          <li>Rationale (Decker et al.): "a patch identifies the code it changes" — operators upgrade first; source later for reproducible verify</li>
+          <li><strong>Embargo failed in hours:</strong> release binaries still carried <strong>debug symbols</strong>; reverse-engineering (helped by LLMs) recovered the patched source and reproduced matching checksums</li>
+          <li>Confirmed on <a href="https://bitcoinops.org/en/podcast/2026/09/01/" target="_blank" rel="noopener">Optech #420 Recap</a> — maintainers: "big learn"; next releases ship source + binaries together</li>
+          <li>Also this cycle: <a href="https://lightning.engineering/posts/2026-06-11-lnd-0.21-launch/" target="_blank" rel="noopener">LND v0.21</a>; CLN 26.06 quantum-resistant channels; <a href="https://lightning.engineering/posts/2026-06-23-tapd-0.8-launch/index.html" target="_blank" rel="noopener">Taproot Assets v0.8</a> + Stablecoin SDK</li>
+        </ul>
+        <p class="sources">
+          <a href="https://blog.blockstream.com/core-lightning-26-06-7/" target="_blank" rel="noopener">blockstream.com/core-lightning-26-06-7</a> ·
+          <a href="https://bitcoinops.org/en/newsletters/2026/08/28/" target="_blank" rel="noopener">Optech #420</a> ·
+          <a href="https://bitcoinops.org/en/podcast/2026/09/01/" target="_blank" rel="noopener">#420 Recap</a>
+        </p>
+        <div class="discuss">
+          <div class="label">Discussion</div>
+          <ol>
+            <li>If withholding source fails when debug symbols remain, what disclosure model survives LLMs?</li>
+            <li>Is "upgrade now, verify later" compatible with "don't trust, verify" — or does it just relocate trust to the signing key?</li>
+          </ol>
+        </div>
+      </section>
+
+
+
+      <section data-background-color="#07111f">
+      <div class="slide-chrome">
+        <div class="mark">
+          <img src="/brand/bitdevs-dmv-logo.png" alt="" width="28" height="28" />
+          <div class="mark-name"><span>BitDevs</span> DMV</div>
+        </div>
+        <div class="deck-meta">Socratic Seminar 022</div>
+      </div>
+      <div class="slide-foot">
+        <span><span class="accent">bitdevsdmv.com</span> · reading room</span>
+        <span>Sep 30, 2026 · PubKey DC</span>
+      </div>
+        <p class="eyebrow">Policy · DC</p>
+        <h2>CLARITY Act — Cloture Failed (Sept 15)</h2>
+        <p class="sources sources-tight">H.R. 3633 never reached the classification fight. Bitcoin already has three labels:</p>
+        <div class="grid-3">
+          <div class="col">
+            <h3>CFTC</h3>
+            <p class="who">Commodity Exchange Act · McDonnell 2018</p>
+            <p class="classify">Commodity</p>
+            <p>Spot and futures. CLARITY would have given exclusive CFTC jurisdiction over Bitcoin spot markets as a “digital commodity.”</p>
+          </div>
+          <div class="col">
+            <h3>SEC</h3>
+            <p class="who">Howey · Hinman 2018</p>
+            <p class="classify">Not a security</p>
+            <p>No issuer, no common enterprise. The bill would have locked this as a digital commodity, not an investment-contract asset.</p>
+          </div>
+          <div class="col">
+            <h3>IRS</h3>
+            <p class="who">Notice 2014-21</p>
+            <p class="classify">Property</p>
+            <p>Not currency. Every sale and swap is a taxable event. Market-structure labels do not amend the tax code.</p>
+          </div>
+        </div>
+        <ul>
+          <li>Senate cloture rejected <strong>49–50</strong> (needed 60) — <a href="https://www.senate.gov/legislative/LIS/roll_call_votes/vote1192/vote_119_2_00234.htm" target="_blank" rel="noopener">roll call 234</a>. House had passed 294–134.</li>
+          <li>Failed on ethics, illicit-finance / developer liability, stablecoin yield, state AG preemption — not SEC vs CFTC.</li>
+        </ul>
+        <p class="sources">
+          <a href="https://www.congress.gov/bill/119th-congress/house-bill/3633" target="_blank" rel="noopener">H.R. 3633</a> ·
+          <a href="https://www.reuters.com/legal/government/us-senate-vote-advancing-landmark-crypto-bill-2026-09-15/" target="_blank" rel="noopener">Reuters</a> ·
+          <a href="https://www.dlapiper.com/en-us/insights/publications/2026/09/senate-fails-to-advance-the-clarity-act" target="_blank" rel="noopener">DLA Piper</a>
+        </p>
+        <div class="discuss discuss-compact">
+          <div class="label">Discussion</div>
+          <ol>
+            <li>If the fight was ethics and illicit finance — not commodity classification — what does that say about “Bitcoin needs clarity” as a political slogan?</li>
+            <li>Is agency-driven market structure better or worse for Bitcoin than a compromised statute?</li>
+          </ol>
+        </div>
+      </section>
+
+
+      <section data-background-color="#07111f">
+      <div class="slide-chrome">
+        <div class="mark">
+          <img src="/brand/bitdevs-dmv-logo.png" alt="" width="28" height="28" />
+          <div class="mark-name"><span>BitDevs</span> DMV</div>
+        </div>
+        <div class="deck-meta">Socratic Seminar 022</div>
+      </div>
+      <div class="slide-foot">
+        <span><span class="accent">bitdevsdmv.com</span> · reading room</span>
+        <span>Sep 30, 2026 · PubKey DC</span>
+      </div>
+        <p class="eyebrow">Implementations · 2025/2026 Wave</p>
+        <h2>Alternative Bitcoin Implementations</h2>
+        <div class="grid-2">
+          <div class="col">
+            <h3>Core derivatives</h3>
+            <ul>
+              <li>Knots Classic + Bit-Block — same maintainer (Dimitri-H)
+                <ul>
+                  <li>Classic: maintenance-mode Knots from before the BIP-110/RDTS hard fork (legacy-chain line)</li>
+                  <li>Bit-Block: his own node — Knots-derived, rebranded, hard anti-spam defaults (`datacarriersize=0`)</li>
+                </ul>
+              </li>
+              <li>Knots Untangled — bitcoinuntangled.org (separate project)</li>
+            </ul>
+            <h3 style="margin-top:0.75rem">Longstanding alts</h3>
+            <ul>
+              <li><a href="https://github.com/btcsuite/btcd" target="_blank" rel="noopener">btcd</a> — Go; caveat: mostly Lightning / infrastructure today, not a competing full-node culture</li>
+              <li><a href="https://github.com/libbitcoin/libbitcoin-system" target="_blank" rel="noopener">libbitcoin</a> — impressive IBD times recently; <strong>no UTXO model</strong>; still no node release</li>
+            </ul>
+          </div>
+          <div class="col">
+            <h3>Independent engines (2025/26 wave)</h3>
+            <ul>
+              <li>Floresta — Rust, Utreexo, ~800MB disk</li>
+              <li>Hornet Node — C++, declarative spec, 11× IBD</li>
+              <li>Bitcoin Echo — pure C, zero deps</li>
+              <li>rbitcoin — Rust, AI-assisted; <strong>no UTXO model</strong></li>
+              <li>satd — Rust, Silent Payments</li>
+              <li>Commons / BLVM — 159 rules, Z3 spec-lock</li>
+            </ul>
+          </div>
+        </div>
+        <div class="discuss">
+          <div class="label">Discussion</div>
+          <ol>
+            <li>What would it take for an independent implementation to reach economic majority?</li>
+            <li>Is dropping the UTXO set (libbitcoin / rbitcoin) a breakthrough for IBD — or a trade that breaks too many assumptions?</li>
+          </ol>
+        </div>
+      </section>
+
+
+      <section data-background-color="#07111f">
+      <div class="slide-chrome">
+        <div class="mark">
+          <img src="/brand/bitdevs-dmv-logo.png" alt="" width="28" height="28" />
+          <div class="mark-name"><span>BitDevs</span> DMV</div>
+        </div>
+        <div class="deck-meta">Socratic Seminar 022</div>
+      </div>
+      <div class="slide-foot">
+        <span><span class="accent">bitdevsdmv.com</span> · reading room</span>
+        <span>Sep 30, 2026 · PubKey DC</span>
+      </div>
+        <p class="eyebrow">Privacy · Critical reading · [[alloc] init]</p>
+        <h2>Shielded Bitcoin — Critique</h2>
+        <p class="sources sources-tight">
+          Claim: Zcash-style notes / nullifiers / ZK on L1, “no soft fork,” indexer replay; peg deferred to PIPEs v2.
+          <a href="https://allocinit.xyz/uploads/shielded-bitcoin.pdf" target="_blank" rel="noopener">paper</a> ·
+          <a href="https://delvingbitcoin.org/t/shielded-bitcoin-private-transfers-on-the-bitcoin-l1/2912" target="_blank" rel="noopener">Delving</a> ·
+          <a href="https://eprint.iacr.org/2026/186" target="_blank" rel="noopener">PIPEs v2</a>
+        </p>
+        <ul class="critique-list">
+          <li><strong>Incomplete:</strong> transfer layer only; the BTC bridge (theft / inflation surface) is a different paper</li>
+          <li><strong>No consensus enforcement:</strong> invalid envelopes can confirm; validity is a software convention</li>
+          <li><strong>PIPEs peg is speculative:</strong> experimental witness encryption; historically TB→GB ciphertexts; heavy compute</li>
+          <li><strong>Indexer liveness:</strong> can censor / delay / lie; “run your own replay” — most users won’t</li>
+          <li><strong>Edge privacy fails:</strong> timing, fees, arity, carrier metadata public; peg edges kill anonymity sets</li>
+          <li><strong>“No soft fork” reframes:</strong> hard problem moved into exotic crypto, not solved</li>
+        </ul>
+        <div class="discuss discuss-compact">
+          <div class="label">Discussion</div>
+          <ol>
+            <li>Is shipping the transfer layer first a research step — or marketing an unfinished bridge?</li>
+            <li>Is “Bitcoin as bulletin board + indexer” just a sidechain with OP_RETURN journaling?</li>
+          </ol>
+        </div>
+      </section>
+
+
+      <!-- CLOSE -->
+      <section class="slide-close" data-background-color="#07111f">
+        <div class="slide-chrome">
+          <div class="mark">
+            <img src="/brand/bitdevs-dmv-logo.png" alt="" width="28" height="28" />
+            <div class="mark-name"><span>BitDevs</span> DMV</div>
+          </div>
+          <div class="deck-meta">Socratic Seminar 022</div>
+        </div>
+        <img class="hero-logo" src="/brand/bitdevs-dmv-logo.png" alt="" width="96" height="122" />
+        <h1><span class="signal">BitDevs</span> DMV</h1>
+        <ul class="close-list">
+          <li>Next event → <a href="https://bitdevsdmv.com">bitdevsdmv.com</a></li>
+          <li>Suggest topics → <a href="https://bitdevsdmv.com/contribute">/contribute</a></li>
+          <li>Coupon · <strong>BITDEVS22</strong> · BTCDecoded Intelligence</li>
+        </ul>
+        <div class="qr-card" aria-label="QR code to bitdevsdmv.com">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 33 33" width="100%" height="100%" shape-rendering="crispEdges"><path fill="#ffffff" d="M0 0h33v33H0z"/><path stroke="#000000" d="M4 4.5h7m1 0h1m1 0h1m2 0h1m1 0h2m1 0h7M4 5.5h1m5 0h1m2 0h1m1 0h2m3 0h1m1 0h1m5 0h1M4 6.5h1m1 0h3m1 0h1m3 0h2m3 0h1m2 0h1m1 0h3m1 0h1M4 7.5h1m1 0h3m1 0h1m1 0h1m4 0h1m2 0h1m1 0h1m1 0h3m1 0h1M4 8.5h1m1 0h3m1 0h1m1 0h3m1 0h1m1 0h3m1 0h1m1 0h3m1 0h1M4 9.5h1m5 0h1m1 0h5m5 0h1m5 0h1M4 10.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M12 11.5h1m1 0h2m3 0h1M4 12.5h1m3 0h1m1 0h3m1 0h1m1 0h1m4 0h5m2 0h1M4 13.5h1m1 0h1m4 0h3m1 0h1m1 0h4m3 0h2m1 0h1M6 14.5h1m1 0h5m1 0h4m1 0h1m1 0h2m1 0h3M4 15.5h2m2 0h2m1 0h3m4 0h1m1 0h1m5 0h2M4 16.5h1m3 0h4m2 0h1m5 0h4m1 0h4M4 17.5h1m6 0h1m1 0h1m2 0h1m1 0h4m2 0h1m2 0h1M6 18.5h1m1 0h1m1 0h1m3 0h7m2 0h4M7 19.5h2m2 0h5m2 0h1m2 0h1m1 0h2m1 0h2M4 20.5h2m1 0h4m1 0h1m3 0h1m3 0h7M12 21.5h1m1 0h1m3 0h3m3 0h1M4 22.5h7m1 0h1m1 0h1m3 0h1m1 0h1m1 0h1m1 0h1M4 23.5h1m5 0h1m3 0h1m1 0h1m1 0h1m1 0h1m3 0h5M4 24.5h1m1 0h3m1 0h1m1 0h4m1 0h2m1 0h9M4 25.5h1m1 0h3m1 0h1m3 0h1m1 0h1m1 0h2m1 0h3m2 0h3M4 26.5h1m1 0h3m1 0h1m2 0h1m1 0h4m1 0h3m2 0h1m1 0h1M4 27.5h1m5 0h1m4 0h1m1 0h1m1 0h1m3 0h5M4 28.5h7m1 0h1m3 0h2m1 0h1m2 0h1m3 0h3"/></svg>
+
+        </div>
+        <p class="chatham">Chatham House Rule applies to everything discussed tonight.</p>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      slideNumber: 'c/t',
+      controls: true,
+      progress: true,
+      center: false,
+      transition: 'fade',
+      transitionSpeed: 'fast',
+      backgroundTransition: 'none',
+      width: 1280,
+      height: 720,
+      margin: 0.04,
+    });
+  </script>
+</body>
+</html>
