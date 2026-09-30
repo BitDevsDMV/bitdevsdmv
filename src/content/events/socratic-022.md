@@ -107,7 +107,7 @@ Equal-weight reading on parallel efforts — none is the “official” approach
 
 ### Mining — GridPool vs Commons Pool
 
-Speaking of pools that go out of business: the software layer is who builds the template and who holds the coinbase — not how many miners exist.
+P2Pool is what died. GridPool and Commons Pool are two attempts to drop the operator without a share-chain. The software layer is who builds the template and who holds the coinbase — not how many miners exist.
 
 **Contrast (the prior attempts):**
 
