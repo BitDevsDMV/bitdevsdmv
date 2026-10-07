@@ -1,7 +1,7 @@
 ---
 title: "Socratic Seminar 020"
 date: 2026-06-23
-venue: "Strategy Hub, 1850 Towers Crescent Plaza, Tysons Corner, VA 22182"
+venue: "Strategy HQ, 1850 Towers Crescent Plaza, Tysons Corner, VA 22182"
 rsvp: "https://www.meetup.com/dc-bit-devs/events/315086997/"
 doors: "5:30pm"
 seminar: "6:00pm"
@@ -26,7 +26,7 @@ Full chapter rules: [Ground rules](/rules). Suggest topics: [Suggest topics](/co
 
 ## Location
 
-[Strategy Hub](https://www.strategy.com/hub), 1850 Towers Crescent Plaza, Tysons Corner, VA 22182
+[Strategy HQ](https://maps.app.goo.gl/GWnJA7iWFNLinSjw6), 1850 Towers Crescent Plaza, Tysons Corner, VA 22182
 
 ## Schedule
 
